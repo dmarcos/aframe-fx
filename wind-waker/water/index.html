@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Hello, WebVR! • A-Frame</title>
+    <meta name="description" content="Hello, WebVR! • A-Frame">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js"></script>
+    <script src="OrbitControls.js"></script>
+    <script>
+      var vertexShader = `
+      #define SCALE 10.0
+
+      varying vec2 vUv;
+
+      uniform float uTime;
+
+      attribute vec3 barycentric;
+
+      varying vec3 vbc;
+
+      float calculateSurface(float x, float z) {
+        float y = 0.0;
+        y += (sin(x * 1.0 / SCALE + uTime * 1.0) + sin(x * 2.3 / SCALE + uTime * 1.5) + sin(x * 3.3 / SCALE + uTime * 0.4)) / 3.0;
+        y += (sin(z * 0.2 / SCALE + uTime * 1.8) + sin(z * 1.8 / SCALE + uTime * 1.8) + sin(z * 2.8 / SCALE + uTime * 0.8)) / 3.0;
+        return y;
+      }
+
+      void main() {
+        vUv = uv;
+        vec3 pos = position;
+        vbc = barycentric;
+        bool animation = true;
+
+        float strength = 1.0;
+        if (animation) {
+          pos.y += strength * calculateSurface(pos.x, pos.z);
+          pos.y -= strength * calculateSurface(0.0, 0.0);
+        }
+
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+      }`;
+
+      var fragmentShader = `
+      #extension GL_OES_standard_derivatives : enable
+
+      varying vec2 vUv;
+
+      uniform sampler2D uMap;
+      uniform float uTime;
+      uniform vec3 uColor;
+      varying vec3 vbc;
+
+      // This is like
+      float aastep (float threshold, float dist) {
+        float afwidth = fwidth(dist) * 0.5;
+        return smoothstep(threshold - afwidth, threshold + afwidth, dist);
+      }
+
+      void main() {
+        bool antialias = true;
+        bool wireframe = false;
+        bool animation = false;
+
+        vec2 uv = vUv * 10.0;
+
+        if (animation) {
+          uv = vUv * 10.0 + vec2(uTime * -0.05);
+
+          uv.y += 0.01 * (sin(uv.x * 3.5 + uTime * 0.35) + sin(uv.x * 4.8 + uTime * 1.05) + sin(uv.x * 7.3 + uTime * 0.45)) / 3.0;
+          uv.x += 0.12 * (sin(uv.y * 4.0 + uTime * 0.5) + sin(uv.y * 6.8 + uTime * 0.75) + sin(uv.y * 11.3 + uTime * 0.2)) / 3.0;
+          uv.y += 0.12 * (sin(uv.x * 4.2 + uTime * 0.64) + sin(uv.x * 6.3 + uTime * 1.65) + sin(uv.x * 8.2 + uTime * 0.45)) / 3.0;
+        }
+
+        vec4 tex1 = texture2D(uMap, uv * 1.0);
+        vec4 tex2 = texture2D(uMap, uv * 1.0 + vec2(0.2));
+
+        vec3 blue = uColor;
+        float thickness = 0.0025;
+
+        if (wireframe || uv.x > 1.0 || uv.y > 1.0) {
+          if (antialias) {
+            // this will be our signed distance for the wireframe edge
+            float d = min(min(vbc.x, vbc.y), vbc.z);
+            // compute the anti-aliased stroke edge
+            float edge = 1.0 - aastep(thickness, d);
+            // now compute the final color of the mesh
+            vec3 lineColor = vec3(1.0, 0.0, 1.0);
+            vec3 fillColor = vec3(0.0, 1.0, 1.0);
+
+            gl_FragColor = vec4(mix(fillColor, lineColor, edge), 1.0);
+          } else {
+            if (vbc.x < thickness || vbc.y < thickness || vbc.z < thickness) {
+              gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+            } else {
+              gl_FragColor = vec4(0.0, 1.0, 1.0, 1.0);
+            }
+          }
+        } else {
+          gl_FragColor = vec4(blue + vec3(tex1.a * 0.9 - tex2.a * 0.02), 1.0);
+        }
+
+      }`;
+
+(function() {
+    var _renderer, _scene, _camera, _controls;
+    var _geometry, _shader, _mesh;
+    var _barycenters;
+
+    window.onload = init;
+
+    function init() {
+        initWorld();
+        initScene();
+    }
+
+    //=====// World //========================================//
+
+    function initWorld() {
+        _renderer = new THREE.WebGLRenderer();
+        _renderer.setPixelRatio(2);
+        _renderer.setSize(window.innerWidth, window.innerHeight);
+        _renderer.setClearColor(0xffffff);
+        document.body.appendChild(_renderer.domElement);
+
+        _scene = new THREE.Scene();
+
+        _camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        _camera.position.set(-20, 10, 21);
+        _camera.target = new THREE.Vector3(0, -5, 0);
+        _camera.lookAt(_camera.target);
+
+        _controls = new THREE.OrbitControls(_camera);
+        _controls.target = _camera.target;
+        _controls.enableDamping = true;
+        _controls.dampingFactor = 0.1;
+        _controls.rotateSpeed = 0.1;
+
+        window.addEventListener('resize', resize, false);
+        resize();
+        requestAnimationFrame(render);
+    }
+
+    function resize() {
+        _renderer.setSize(window.innerWidth, window.innerHeight);
+        _camera.aspect = window.innerWidth / window.innerHeight;
+        _camera.updateProjectionMatrix();
+    }
+
+    function render() {
+        requestAnimationFrame(render);
+        if (_controls) _controls.update();
+        _renderer.render(_scene, _camera);
+    }
+
+    //=====// Scene //========================================//
+
+    function initScene() {
+        initGeometry();
+        initShader();
+        initMesh();
+        requestAnimationFrame(loop);
+    }
+
+    function initGeometry() {
+        _geometry = new THREE.PlaneBufferGeometry(50, 50, 10, 10);
+        _geometry.rotateX(-Math.PI / 2);
+        unindexBufferGeometry(_geometry);
+    }
+
+    function unindexBufferGeometry (bufferGeometry) {
+      // un-indices the geometry, copying all attributes like position and uv
+      const index = bufferGeometry.getIndex();
+      if (!index) return; // already un-indexed
+
+      const indexArray = index.array;
+      const triangleCount = indexArray.length / 3;
+
+      const attributes = bufferGeometry.attributes;
+      const newAttribData = Object.keys(attributes).map(key => {
+        return {
+          array: [],
+          attribute: bufferGeometry.getAttribute(key)
+        };
+      });
+
+      for (let i = 0; i < triangleCount; i++) {
+        // indices into attributes
+        const a = indexArray[i * 3 + 0];
+        const b = indexArray[i * 3 + 1];
+        const c = indexArray[i * 3 + 2];
+        const indices = [ a, b, c ];
+
+        // for each attribute, put vertex into unindexed list
+        newAttribData.forEach(data => {
+          const attrib = data.attribute;
+          const dim = attrib.itemSize;
+          // add [a, b, c] vertices
+          for (let i = 0; i < indices.length; i++) {
+            const index = indices[i];
+            for (let d = 0; d < dim; d++) {
+              const v = attrib.array[index * dim + d];
+              data.array.push(v);
+            }
+          }
+        });
+      }
+      index.array = null;
+      bufferGeometry.setIndex(null);
+
+      // now copy over new data
+      newAttribData.forEach(data => {
+        const newArray = new data.attribute.array.constructor(data.array);
+        data.attribute.setArray(newArray);
+      });
+    }
+
+    function calculateBarycenters() {
+        var attrib = _geometry.getIndex() || _geometry.getAttribute('position');
+        var count = attrib.count / 3;
+
+        _barycenters = [];
+        for (var i = 0; i < count; ++i) {
+          const even = i % 2 === 0;
+          _barycenters.push(
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1
+          );
+          /*if (even) {
+            _barycenters.push(
+              1, 0, 0,
+              0, 1, 0,
+              0, 0, 1
+            );
+          } else {
+            _barycenters.push(
+              0, 1, 0,
+              1, 0, 0,
+              0, 0, 1
+            );
+          }*/
+        };
+        const array = new Float32Array(_barycenters);
+        const attribute = new THREE.BufferAttribute(array, 3);
+        _geometry.addAttribute('barycentric', attribute);
+    }
+
+    function initShader() {
+        var baryCenters = calculateBarycenters();
+        var uniforms = {
+            uMap: {type: 't', value: null},
+            uTime: {type: 'f', value: 0},
+            uColor: {type: 'f', value: new THREE.Color('#0051da')}
+        };
+
+        _shader = new THREE.ShaderMaterial({
+            uniforms: uniforms,
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            side: THREE.DoubleSide,
+        });
+
+        var textureLoader = new THREE.TextureLoader();
+        textureLoader.load('https://cinemont.com/tutorials/zelda/water.png', function (texture) {
+            _shader.uniforms.uMap.value = texture;
+            texture.wrapS = texture.wrapT = THREE.REPEAT_WRAPPING;
+        });
+    }
+
+    function initMesh() {
+        _mesh = new THREE.Mesh(_geometry, _shader);
+        _scene.add(_mesh);
+    }
+
+    function loop(e) {
+        requestAnimationFrame(loop);
+        _shader.uniforms.uTime.value = e * 0.001;
+    }
+
+})();
+  </script>
+  </head>
+  <body>
+  </body>
+</html>
