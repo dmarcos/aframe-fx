@@ -17,8 +17,13 @@
     <script src="water-system.js"></script>
   </head>
   <body>
-    <a-scene background="color: #FAFAFA" slideshow="slides: #slide1, #slide2, #slide3, #slide4, #slide5" water>
+    <a-scene
+      background="color: #FAFAFA" slideshow="slides: #slide1, #slide2, #slide3, #slide4, #slide5"
+      water
+      fog="color: #c0f3ff; density: 10000; far: 25; near: 1; type: linear">
       <a-assets>
+        <img id="clouds" src="clouds.png" />
+        <img id="water" src="water.png" />
         <a-asset-item id="kingOfReadLions" src="king-of-red-lions.glb"></a-asset-item>
       </a-assets>
 
@@ -66,7 +71,7 @@
         <div class="slide">
           <div><h1>Animate Vertices<h1></div>
         </div>
-        <a-entity camera="fov: 60" position="0 0 1" vignette-background></a-entity>
+        <a-entity camera="fov: 80" position="0 0 1" vignette-background></a-entity>
         <a-entity>
           <a-entity position="0.25 0 0" scale="0.7 0.7 0.7">
             <a-entity
@@ -77,16 +82,24 @@
       </a-entity>
 
       <a-entity id="slide5">
-        <a-entity camera="fov: 60" position="-20 10 21" vignette-background></a-entity>
+        <a-entity
+          geometry="primitive: plane; height: 16; width: 64"
+          material="fog: false; src: #clouds; shader: flat"
+          rotation="0 0 0"
+          position="0 5 -20">
+
+        </a-entity>
+        <a-entity
+          camera="fov: 80" position="0 1.5 0" rotation="-15 0 0" vignette-background></a-entity>
         <a-entity
           id="sky" geometry="primitive: sphere; radius: 50;"
           material="shader: sky; sunPosition: 10 90 0; side: back"></a-entity>
         <a-entity
-          position="-10 -0.06 10"
+          position="0 -0.06 -3"
           rotation="0 150 0"
-          scale="0.018 0.018 0.018"
+          scale="0.004 0.004 0.004"
           gltf-model="#kingOfReadLions"></a-entity>
-        <a-entity water rotation="0 45 0"></a-entity>
+        <a-entity water></a-entity>
       </a-entity>
     </a-scene>
   </body>
