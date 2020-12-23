@@ -2,11 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Hello, WebVR! • A-Frame</title>
+    <title>Wind Waker Ocean FX • A-Frame</title>
     <meta name="description" content="Hello, WebVR! • A-Frame">
-    <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@10013c4690675c59bd45395085948f8ef07a10dd/dist/aframe-master.min.js"></script>
     <script src="slideshow.js"></script>
-    <script src="sky.js"></script>
     <script src="water-v1.js"></script>
     <script src="water-v2.js"></script>
     <script src="water-v3.js"></script>
@@ -15,16 +14,22 @@
     <script src="tiles-animation.js"></script>
     <script src="vignette-background.js"></script>
     <script src="water-system.js"></script>
+    <script src="info-message.js"></script>
   </head>
   <body>
     <a-scene
-      background="color: #FAFAFA" slideshow="slides: #slide1, #slide2, #slide3, #slide4, #slide5"
+      slideshow="slides: #slide1, #slide2, #slide3, #slide4, #slide5; firstSlideIndex: 4; enabled: false"
       water
-      fog="color: #c0f3ff; density: 10000; far: 25; near: 1; type: linear">
+      fog="color: #c0f3ff; density: 10000; far: 25; near: 1; type: linear"
+      renderer="alpha: false"
+      info-message="htmlSrc: #messageText"
+      background="color: white">
       <a-assets>
         <img id="clouds" src="clouds.png" />
         <img id="water" src="water.png" />
         <a-asset-item id="kingOfReadLions" src="king-of-red-lions.glb"></a-asset-item>
+        <a-asset-item id="island" src="island.glb"></a-asset-item>
+        <a-asset-item id="messageText" src="message.html"></a-asset-item>
       </a-assets>
 
       <a-entity id="slide1">
@@ -82,24 +87,27 @@
       </a-entity>
 
       <a-entity id="slide5">
-        <a-entity
+        <a-entity id="skyBackdrop"
           geometry="primitive: plane; height: 16; width: 64"
           material="fog: false; src: #clouds; shader: flat"
           rotation="0 0 0"
           position="0 5 -20">
-
         </a-entity>
         <a-entity
-          camera="fov: 80" position="0 1.5 0" rotation="-15 0 0" vignette-background></a-entity>
+          camera="fov: 80; far: 10000" position="0 1.5 0" rotation="-15 0 0" vignette-background></a-entity>
         <a-entity
-          id="sky" geometry="primitive: sphere; radius: 50;"
-          material="shader: sky; sunPosition: 10 90 0; side: back"></a-entity>
-        <a-entity
-          position="0 -0.06 -3"
+          position="0 -0.02 -3"
           rotation="0 150 0"
-          scale="0.004 0.004 0.004"
+          scale="0.005 0.005 0.005"
           gltf-model="#kingOfReadLions"></a-entity>
+
+        <a-entity
+          position="10 0 5.5"
+          rotation="0 180 0"
+          scale="0.0013 0.0013 0.0013"
+          gltf-model="#island"></a-entity>
         <a-entity water></a-entity>
+        <a-entity light="type: ambient; color: white"></a-entity>
       </a-entity>
     </a-scene>
   </body>

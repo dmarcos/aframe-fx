@@ -1,7 +1,6 @@
 AFRAME.registerComponent('tile', {
   vertexShader:`
     varying vec2 vUv;
-
     void main() {
       vUv = uv;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
@@ -47,7 +46,7 @@ AFRAME.registerComponent('tile', {
     });
 
     var textureLoader = new THREE.TextureLoader();
-    textureLoader.load('https://cinemont.com/tutorials/zelda/water.png', function (texture) {
+    textureLoader.load('assets/water.png', function (texture) {
       shader.uniforms.uMap.value = texture;
       texture.wrapS = texture.wrapT = THREE.REPEAT_WRAPPING;
     });

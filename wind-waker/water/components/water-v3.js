@@ -110,7 +110,7 @@ AFRAME.registerComponent('water-v3', {
     });
 
     var textureLoader = new THREE.TextureLoader();
-    textureLoader.load('https://cinemont.com/tutorials/zelda/water.png', function (texture) {
+    textureLoader.load('assets/water.png', function (texture) {
       shader.uniforms.uMap.value = texture;
       texture.wrapS = texture.wrapT = THREE.REPEAT_WRAPPING;
     });
