@@ -1,7 +1,5 @@
 AFRAME.registerComponent('water-v1', {
   vertexShader:`
-    #define SCALE 10.0
-
     varying vec2 vUv;
 
     attribute vec3 barycentric;
@@ -56,7 +54,7 @@ AFRAME.registerComponent('water-v1', {
     }`,
 
   init: function () {
-    var unindexBufferGeometry = this.el.sceneEl.systems.water.unindexBufferGeometry;
+    var unindexBufferGeometry = this.el.sceneEl.systems.wireframe.unindexBufferGeometry;
     var geometry = this.geometry = new THREE.PlaneBufferGeometry(1, 1, 10, 10);
     geometry.rotateX(-Math.PI / 2);
     unindexBufferGeometry(geometry);
@@ -70,7 +68,7 @@ AFRAME.registerComponent('water-v1', {
   },
 
   initShader: function () {
-    var calculateBarycenters = this.el.sceneEl.systems.water.calculateBarycenters;
+    var calculateBarycenters = this.el.sceneEl.systems.wireframe.calculateBarycenters;
     var baryCenters = calculateBarycenters(this.geometry);
     var uniforms = {
       uMap: {type: 't', value: null},

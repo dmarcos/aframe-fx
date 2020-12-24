@@ -1,4 +1,4 @@
-AFRAME.registerSystem('water', {
+AFRAME.registerSystem('wireframe', {
   unindexBufferGeometry: function (bufferGeometry) {
     // un-indices the geometry, copying all attributes like position and uv
     const index = bufferGeometry.getIndex();
@@ -52,7 +52,6 @@ AFRAME.registerSystem('water', {
   calculateBarycenters: function(geometry) {
     var attrib = geometry.getIndex() || geometry.getAttribute('position');
     var count = attrib.count / 3;
-
     var barycenters = this.barycenters = [];
     for (var i = 0; i < count; ++i) {
       barycenters.push(
@@ -61,8 +60,6 @@ AFRAME.registerSystem('water', {
         0, 0, 1
       );
     };
-    const array = new Float32Array(barycenters);
-    const attribute = new THREE.BufferAttribute(array, 3);
-    geometry.addAttribute('barycentric', attribute);
+    geometry.addAttribute('barycentric', new THREE.Float32BufferAttribute(barycenters, 3));
   }
 });

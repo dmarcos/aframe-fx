@@ -4,9 +4,10 @@
     <meta charset="utf-8">
     <title>Wind Waker Ocean FX • A-Frame</title>
     <meta name="description" content="Hello, WebVR! • A-Frame">
-    <script src="../../js/aframe-master.min.js"></script>
-    <script src="../../js/slideshow.js"></script>
-    <script src="../../js/info-message.js"></script>
+    <script src="../../js/vendor/aframe-master.min.js"></script>
+    <script src="../../js/components/slideshow.js"></script>
+    <script src="../../js/components/info-message.js"></script>
+    <script src="../../js/systems/wireframe.js"></script>
     <script src="components/water-v1.js"></script>
     <script src="components/water-v2.js"></script>
     <script src="components/water-v3.js"></script>
@@ -14,12 +15,10 @@
     <script src="components/tile.js"></script>
     <script src="components/tiles-animation.js"></script>
     <script src="components/vignette-background.js"></script>
-    <script src="components/water-system.js"></script>
   </head>
   <body>
     <a-scene
       slideshow="slides: #slide1, #slide2, #slide3, #slide4, #slide5; firstSlideIndex: 4; enabled: false"
-      water
       fog="color: #c0f3ff; density: 10000; far: 25; near: 1; type: linear"
       renderer="alpha: false"
       info-message="htmlSrc: #messageText"

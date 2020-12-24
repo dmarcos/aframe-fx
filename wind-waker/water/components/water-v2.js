@@ -48,7 +48,7 @@ AFRAME.registerComponent('water-v2', {
     }`,
 
   init: function () {
-    var unindexBufferGeometry = this.el.sceneEl.systems.water.unindexBufferGeometry;
+    var unindexBufferGeometry = this.el.sceneEl.systems.wireframe.unindexBufferGeometry;
     var geometry = this.geometry = new THREE.PlaneBufferGeometry(1, 1, 10, 10);
     geometry.rotateX(-Math.PI / 2);
     unindexBufferGeometry(geometry);
@@ -62,7 +62,7 @@ AFRAME.registerComponent('water-v2', {
   },
 
   initShader: function () {
-    var calculateBarycenters = this.el.sceneEl.systems.water.calculateBarycenters;
+    var calculateBarycenters = this.el.sceneEl.systems.wireframe.calculateBarycenters;
     var baryCenters = calculateBarycenters(this.geometry);
     var uniforms = {
       uMap: {type: 't', value: null},

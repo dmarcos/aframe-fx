@@ -20,10 +20,8 @@ AFRAME.registerComponent('tile', {
     }`,
 
   init: function () {
-    var unindexBufferGeometry = this.el.sceneEl.systems.water.unindexBufferGeometry;
     var geometry = this.geometry = new THREE.PlaneBufferGeometry(1, 1, 1, 1);
     geometry.rotateX(-Math.PI / 2);
-    unindexBufferGeometry(geometry);
     this.initShader();
     this.mesh = new THREE.Mesh(geometry, this.shader);
     this.el.setObject3D('mesh', this.mesh);
@@ -31,8 +29,6 @@ AFRAME.registerComponent('tile', {
   },
 
   initShader: function () {
-    var calculateBarycenters = this.el.sceneEl.systems.water.calculateBarycenters;
-    var baryCenters = calculateBarycenters(this.geometry);
     var uniforms = {
       uColor: {type: 'f', value: new THREE.Color('#0051da')},
       uMap: {type: 't', value: null}
