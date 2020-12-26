@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Quad • A-Frame</title>
+    <meta name="description" content="Hello, WebVR! • A-Frame">
+    <script src="../../js/vendor/aframe-master.min.js"></script>
+    <script src="../../js/systems/wireframe.js"></script>
+    <script src="../../js/components/slideshow.js"></script>
+    <script src="components/explosion-sprite-sheet.js"></script>
+    <script src="components/quad-wireframe.js"></script>
+    <script src="components/quad-texture.js"></script>
+    <script src="components/sprite-strip.js"></script>
+    <script src="components/sprite-animation.js"></script>
+    <script src="components/uv-values.js"></script>
+  </head>
+  <body>
+    <a-scene
+      slideshow="slides: #slide1, #slide2, #slide3; firstSlideIndex: 0; enabled: false"
+      renderer="alpha: false; antialias: false"
+      background="color: white">
+      <a-entity id="slide1">
+        <div class="slide">
+          <div>
+            <h1>Quad Geometry</h1>
+            <p>The humble quad. A rectangle composed of two triangles. A building block for many effects.</p>
+
+          </div>
+        </div>
+        <a-entity camera position="-0.40 0 1"></a-entity>
+        <a-entity>
+          <a-entity quad-wireframe></a-entity>
+        </a-entity>
+      </a-entity>
+
+      <a-entity id="slide2">
+        <div class="slide">
+          <div>
+            <h1>Textured Quad</h1>
+            <p>To create effects quads will be shaded, textured and animated. This is a quad with a texture applied from a sprite sheet. The uv values change to select the desired portion of the image and create the illusion of an animated character.</p>
+          </div>
+        </div>
+        <a-entity camera position="-0.20 0 1"></a-entity>
+        <a-entity>
+          <a-entity text="value: Quad; color: black" position="0.15 0.4 0"></a-entity>
+          <a-entity quad-texture uv-values scale="0.71 1 1" position="-0.4 0 -1">
+            <a-entity id="topRightUV" text="value: 0, 0; color: black" position="0.88 0.25 0.8"></a-entity>
+            <a-entity id="topLeftUV" text="value: 0, 0; color: black" position="0.25 0.25 0.8"></a-entity>
+            <a-entity id="bottomRightUV" text="value: 0, 0; color: black" position="0.88 -0.25 0.8"></a-entity>
+            <a-entity id="bottomLeftUV" text="value: 0, 0; color: black" position="0.25 -0.25 0.8"></a-entity>
+          </a-entity>
+          <a-entity text="value: Sprite Sheet; color: black" position="0.98 0.4 0">
+            <a-entity text="value: 0, 1; color: black" position="-0.30 -0.12 -0.25"></a-entity>
+            <a-entity text="value: 0, 0; color: black" position="-0.30 -0.67 -0.25"></a-entity>
+
+            <a-entity text="value: 0.33, 0; color: black" position="0.15 -0.67 -0.25"></a-entity>
+            <a-entity text="value: 0.66, 0; color: black" position="0.50 -0.67 -0.25"></a-entity>
+            <a-entity text="value: 1, 0; color: black" position="0.85 -0.67 -0.25"></a-entity>
+
+            <a-entity text="value: 0.33, 1; color: black" position="0.15 -0.12 -0.25"></a-entity>
+            <a-entity text="value: 0.66, 1; color: black" position="0.50 -0.12 -0.25"></a-entity>
+            <a-entity text="value: 1, 1; color: black" position="0.85 -0.12 -0.25"></a-entity>
+
+          </a-entity>
+          <a-entity sprite-strip scale="2.12 1 1" position="1.4 0 -1"></a-entity>
+        </a-entity>
+      </a-entity>
+
+      <a-entity id="slide3">
+        <div class="slide">
+          <div>
+            <h1>Textured Quad</h1>
+            <p>There are many software packages that can simulate complex animations and generate a corresponding sprite sheet.</p>
+          </div>
+        </div>
+        <a-entity camera position="-0.20 0 1"></a-entity>
+        <a-entity>
+          <a-entity sprite-animation scale="1 1 1" position="-0.4 0 -1"></a-entity>
+          <a-entity text="value: Sprite Sheet; color: black" position="0.98 0.5 0"></a-entity>
+          <a-entity explosion-sprite-sheet scale="2 2 1" position="1.4 0 -1"></a-entity>
+        </a-entity>
+      </a-entity>
+
+    </a-scene>
+  </body>
+</html>

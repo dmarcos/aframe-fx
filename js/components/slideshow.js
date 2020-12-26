@@ -24,12 +24,17 @@
     this.onKeyUp = this.onKeyUp.bind(this);
     this.showSlide = this.showSlide.bind(this);
 
-    this.setHash(this.data.firstSlideIndex);
-    this.showSlide();
 
-    if (this.data.slides.length == 1) { return; }
+    if (this.data.slides.length == 1) {
+      this.setHash(this.data.firstSlideIndex);
+      this.showSlide();
+      return;
+    }
 
     this.createControlButtons();
+
+    this.setHash(this.data.firstSlideIndex);
+    this.showSlide();
 
     window.addEventListener('keydown', this.onKeyDown);
     window.addEventListener('keyup', this.onKeyUp);
@@ -70,10 +75,9 @@
     if (!this.data.enabled) { previousButtonEl.classList.add('hidden'); }
     previousButtonEl.setAttribute('title', 'Previous Slide');
 
-    this.counterEl = counterEl = document.createElement('div');
+    counterEl = this.counterEl = document.createElement('div');
     counterEl.classList.add('a-slideshow-counter');
     this.counterTextEl = document.createElement('span');
-    this.counterTextEl.innerHTML = '1 / 9';
     this.counterEl.appendChild(this.counterTextEl);
 
     this.nextButtonEl = nextButtonEl = document.createElement('button');
@@ -114,17 +118,17 @@
       '.slide h1 {font-size: 20pt; color: #2d2d2d, marging: 50%; text-align: right;}' +
       '.slide p {font-size: 12pt; color: #2d2d2d; text-align: justify;}' +
 
-      '.a-slideshow-container {position: absolute; left: 50%; bottom: 20px;}' +
+      '.a-slideshow-container {display:flex; position: absolute; left: calc(50% - 105px); bottom: 20px; width: 210px;}' +
       //'.a-slideshow-container .hidden {display: none}' +
       '.a-slideshow-button-previous {background: rgba(0, 0, 0, 0.35) ' + infoMessagePrevButtonDataURI + ' 50% 50% no-repeat;}' +
       '.a-slideshow-button-next {background: rgba(0, 0, 0, 0.35) ' + infoMessageNextButtonDataURI + ' 50% 50% no-repeat;}' +
-      '.a-slideshow-button {background-size: 92% 90%; border: 0; bottom: 0; cursor: pointer; min-width: 78px; min-height: 34px; padding-right: 0; padding-top: 0; position: absolute; right: 0; transition: background-color .05s ease; -webkit-transition: background-color .05s ease; z-index: 9999; border-radius: 8px; touch-action: manipulation;}' +
+      '.a-slideshow-button {background-size: 92% 90%; border: 0; bottom: 0; cursor: pointer; min-width: 78px; min-height: 34px; padding-right: 0; padding-top: 0; transition: background-color .05s ease; -webkit-transition: background-color .05s ease; z-index: 9999; border-radius: 8px; touch-action: manipulation;}' +
       '.a-slideshow-button.next {right: -60px;}' +
       '.a-slideshow-button.previous {right: 60px;}' +
       '.a-slideshow-button .hidden {display: none}' +
       '.a-slideshow-button:active, .a-slideshow-button:hover, .hover {background-color: #ef2d5e;}' +
-      '.a-slideshow-counter {align: auto; line-height: 34px; text-align: center; min-width: 50px; color: white; display: inline-block; min-height: 34px; text-align: middle; background-color: black}' +
-      '.a-slideshow-counter span {display: inline-block; vertical-align: middle;}'
+      '.a-slideshow-counter {align: auto; height: 34px; text-align: center; min-width: 50px; color: #2d2d2d; display: inline-block;}' +
+      '.a-slideshow-counter span {line-height: 34px; display: inline-block; vertical-align: middle;}'
     var style = document.createElement('style');
 
     if (style.styleSheet) {
@@ -190,6 +194,7 @@
     var currentUrl = document.URL;
     var slideIndex = currentUrl.split('#')[1];
     var cameraSlideEl;
+    var counterTextEl = this.counterTextEl;
 
     slideIndex = this.currentSlideIndex = Number.parseInt(slideIndex) || 0;
     cameraSlideEl = this.slideEls[slideIndex].querySelector("[camera]");
@@ -209,6 +214,7 @@
       if (slideTextEl) { slideTextEl.classList.add('hidden'); }
     }
 
+    if (counterTextEl) { counterTextEl.innerHTML = slideIndex + 1 + '/' + this.data.slides.length; }
     this.el.setAttribute('vr-mode-ui', 'enabled', this.currentSlideIndex === this.data.firstSlideIndex);
 
   }

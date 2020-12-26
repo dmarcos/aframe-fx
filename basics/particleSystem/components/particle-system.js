@@ -1,21 +1,15 @@
 AFRAME.registerComponent('quad-wireframe', {
   vertexShader:`
-    varying vec2 vUv;
-
     attribute vec3 barycentric;
     varying vec3 vDistanceBarycenter;
 
     void main() {
-      vUv = uv;
       vDistanceBarycenter = barycentric;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
   `,
 
   fragmentShader:`
-    uniform float uTime;
-
-    varying vec2 vUv;
     varying vec3 vDistanceBarycenter;
 
     // This is like

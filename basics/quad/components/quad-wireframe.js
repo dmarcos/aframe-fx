@@ -1,21 +1,15 @@
-AFRAME.registerComponent('quad-texture', {
+AFRAME.registerComponent('quad-wireframe', {
   vertexShader:`
-    varying vec2 vUv;
-
     attribute vec3 barycentric;
     varying vec3 vDistanceBarycenter;
 
     void main() {
-      vUv = uv;
       vDistanceBarycenter = barycentric;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
   `,
 
   fragmentShader:`
-    uniform float uTime;
-
-    varying vec2 vUv;
     varying vec3 vDistanceBarycenter;
 
     // This is like
@@ -53,30 +47,19 @@ AFRAME.registerComponent('quad-texture', {
     var quadHalfSize = quadSize / 2.0;
     var wireframeSystem = this.el.sceneEl.systems.wireframe;
 
+    // No indexed
     var positions = [
-      -quadHalfSize, -quadHalfSize, 0.0, // bottom-left
-       quadHalfSize, -quadHalfSize, 0.0, // bottom-right
-      -quadHalfSize, quadHalfSize, 0.0, // top-left
-       quadHalfSize, quadHalfSize, 0.0  // top-right
+      // Top left triangle
+      quadHalfSize, quadHalfSize, 0.0,
+      -quadHalfSize, quadHalfSize, 0.0,
+      -quadHalfSize, -quadHalfSize, 0.0,
+      // Bottom right triangle
+      -quadHalfSize, -quadHalfSize, 0.0,
+      quadHalfSize, -quadHalfSize, 0.0,
+      quadHalfSize, quadHalfSize, 0.0
     ];
-
-    var uvs = [
-      0, 0,
-      0, 1,
-      1, 0,
-      1, 1,
-    ];
-
-    // Counter-clockwise triangle winding.
-    geometry.setIndex([
-      3, 2, 0, // top-left triangle.
-      0, 1, 3  // bottom-right triangle.
-    ]);
 
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, vertexCoordinateSize));
-    geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, uvCoordinateSize));
-
-    wireframeSystem.unindexBufferGeometry(geometry);
     wireframeSystem.calculateBarycenters(geometry);
   },
 

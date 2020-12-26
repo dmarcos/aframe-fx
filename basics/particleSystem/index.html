@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Quad • A-Frame</title>
+    <meta name="description" content="Hello, WebVR! • A-Frame">
+    <script src="../../js/vendor/aframe-master.min.js"></script>
+    <script src="../../js/systems/wireframe.js"></script>
+    <script src="../../js/components/slideshow.js"></script>
+    <script src="components/quad-wireframe.js"></script>
+    <script src="components/quad-texture.js"></script>
+    <script src="components/sprite-strip.js"></script>
+  </head>
+  <body>
+    <a-scene
+      slideshow="slides: #slide1, #slide2; firstSlideIndex: 0; enabled: false"
+      renderer="alpha: false; antialias: false"
+      background="color: white">
+      <a-entity id="slide1">
+        <div class="slide">
+          <div>
+            <h1>Particle System</h1>
+            <p>A particle system is a technique to represent phenomena like smoke, fire, rain, fireworks... Effects that can represented as a cloud of discrete small elements that combanied appear as a single entity or follow some group dynamics. The emitter is a location where the particles are created. Each particle can be rendered in multiple ways. Here we use quads that are always facing the camera also reffered as billboards.</p>
+          </div>
+        </div>
+        <a-entity camera position="-0.40 0 1"></a-entity>
+        <a-entity>
+          <a-entity quad-wireframe></a-entity>
+        </a-entity>
+      </a-entity>
+
+      <a-entity id="slide2">
+        <div class="slide">
+          <div>
+            <h1>Textured Quad</h1>
+            <p>To create effects quads will be shaded, textured and animated. This is a quad with a texture applied from a sprite sheet. The uv values change to select the desired portion of the image and create the illusion of an animated character.</p>
+          </div>
+        </div>
+        <a-entity camera position="-0.20 0 1"></a-entity>
+        <a-entity>
+          <a-entity text="value: Quad; color: black" position="0.15 0.4 0"></a-entity>
+          <a-entity quad-texture scale="0.71 1 1" position="-0.4 0 -1"></a-entity>
+          <a-entity text="value: Sprite Sheet; color: black" position="0.98 0.4 0"></a-entity>
+          <a-entity sprite-strip scale="2.12 1 1" position="1.4 0 -1"></a-entity>
+        </a-entity>
+      </a-entity>
+
+    </a-scene>
+  </body>
+</html>
