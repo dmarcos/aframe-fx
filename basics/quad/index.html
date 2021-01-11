@@ -7,6 +7,7 @@
     <script src="../../js/vendor/aframe-master.min.js"></script>
     <script src="../../js/systems/wireframe.js"></script>
     <script src="../../js/components/slideshow.js"></script>
+    <script src="../../js/components/info-message.js"></script>
     <script src="components/explosion-sprite-sheet.js"></script>
     <script src="components/quad-wireframe.js"></script>
     <script src="components/quad-texture.js"></script>
@@ -18,13 +19,17 @@
     <a-scene
       slideshow="slides: #slide1, #slide2, #slide3; firstSlideIndex: 0; enabled: false"
       renderer="alpha: false; antialias: false"
-      background="color: white">
+      background="color: white"
+      info-message="htmlSrc: #messageText">
+      <a-assets>
+        <a-asset-item id="messageText" src="assets/message.html"></a-asset-item>
+      </a-assets>
+
       <a-entity id="slide1">
         <div class="slide">
           <div>
             <h1>Quad Geometry</h1>
             <p>The humble quad. A rectangle composed of two triangles. A building block for many effects.</p>
-
           </div>
         </div>
         <a-entity camera position="-0.40 0 1"></a-entity>
@@ -38,6 +43,7 @@
           <div>
             <h1>Textured Quad</h1>
             <p>To create effects quads will be shaded, textured and animated. This is a quad with a texture applied from a sprite sheet. The uv values change to select the desired portion of the image and create the illusion of an animated character.</p>
+            <p>To UV coordinates of the current frame are displayed in the corners of the Quad</p>
           </div>
         </div>
         <a-entity camera position="-0.20 0 1"></a-entity>
@@ -71,13 +77,14 @@
           <div>
             <h1>Textured Quad</h1>
             <p>There are many software packages that can simulate complex animations and generate a corresponding sprite sheet.</p>
+            <p>The current frame is highlighted in the sprite sheet as the explosion animation plays.</p>
           </div>
         </div>
         <a-entity camera position="-0.20 0 1"></a-entity>
         <a-entity>
-          <a-entity sprite-animation scale="1 1 1" position="-0.4 0 -1"></a-entity>
-          <a-entity text="value: Sprite Sheet; color: black" position="0.98 0.5 0"></a-entity>
-          <a-entity explosion-sprite-sheet scale="2 2 1" position="1.4 0 -1"></a-entity>
+          <a-entity sprite-animation scale="1.5 1.5 1" position="-0.4 0 -1"></a-entity>
+          <a-entity text="value: Sprite Sheet; color: black" position="0.98 0.6 0"></a-entity>
+          <a-entity explosion-sprite-sheet scale="2.2 2.2 1" position="1.4 0 -1"></a-entity>
         </a-entity>
       </a-entity>
 
