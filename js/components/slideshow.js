@@ -2,7 +2,8 @@
   schema: {
     slides: {type: 'array'},
     firstSlideIndex: {default: 0},
-    enabled: {default: true}
+    enabled: {default: true},
+    vrEnabled: {default: true}
   },
 
   init: function () {
@@ -215,7 +216,6 @@
     }
 
     if (counterTextEl) { counterTextEl.innerHTML = slideIndex + 1 + '/' + this.data.slides.length; }
-    this.el.setAttribute('vr-mode-ui', 'enabled', false);//this.currentSlideIndex === this.data.firstSlideIndex);
-
+    this.el.setAttribute('vr-mode-ui', 'enabled', this.data.vrEnabled && this.currentSlideIndex === this.data.firstSlideIndex);
   }
 });
