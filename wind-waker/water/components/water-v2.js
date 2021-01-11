@@ -15,6 +15,10 @@ AFRAME.registerComponent('water-v2', {
   `,
 
   fragmentShader:`
+    #if __VERSION__ == 100
+      #extension GL_OES_standard_derivatives : enable
+    #endif
+
     uniform vec3 uColor;
     uniform sampler2D uMap;
     uniform float uTime;
