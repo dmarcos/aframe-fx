@@ -215,7 +215,7 @@
     }
 
     if (counterTextEl) { counterTextEl.innerHTML = slideIndex + 1 + '/' + this.data.slides.length; }
-    this.el.setAttribute('vr-mode-ui', 'enabled', this.currentSlideIndex === this.data.firstSlideIndex);
+    this.el.setAttribute('vr-mode-ui', 'enabled', false);//this.currentSlideIndex === this.data.firstSlideIndex);
 
   }
 });
