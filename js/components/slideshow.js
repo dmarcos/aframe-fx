@@ -129,7 +129,8 @@
       '.a-slideshow-button .hidden {display: none}' +
       '.a-slideshow-button:active, .a-slideshow-button:hover, .hover {background-color: #ef2d5e;}' +
       '.a-slideshow-counter {align: auto; height: 34px; text-align: center; min-width: 50px; color: #2d2d2d; display: inline-block;}' +
-      '.a-slideshow-counter span {line-height: 34px; display: inline-block; vertical-align: middle;}'
+      '.a-slideshow-counter span {line-height: 34px; display: inline-block; vertical-align: middle;}' +
+      '@media (orientation: portrait) { .a-slideshow-container {right: 20px; left: auto}}';
     var style = document.createElement('style');
 
     if (style.styleSheet) {
