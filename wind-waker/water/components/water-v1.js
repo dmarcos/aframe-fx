@@ -38,19 +38,9 @@ AFRAME.registerComponent('water-v1', {
       vec4 tex1 = texture2D(uMap, uv * 1.0);
       vec4 tex2 = texture2D(uMap, uv * 1.0 + vec2(0.2));
 
-      // this will be our signed distance for the wireframe edge
-      float d = min(min(vDistanceBarycenter.x, vDistanceBarycenter.y), vDistanceBarycenter.z);
-      // compute the anti-aliased stroke edge
-      float edge = 1.0 - aastep(thickness, d);
-      // now compute the final color of the mesh
-      vec4 lineColor = vec4(0.1, 0.1, 0.1, 1.0);
-      vec4 fillColor = vec4(1.0, 1.0, 1.0, 1.0);
 
-      if (tileIndex > currentTile) {
-        gl_FragColor = vec4(mix(fillColor, lineColor, edge));
-      } else {
-        gl_FragColor = vec4(blue + vec3(tex1.a * 0.9 - tex2.a * 0.02), 1.0);
-      }
+      gl_FragColor = vec4(blue + vec3(tex1.a * 0.9 - tex2.a * 0.02), 1.0);
+
     }`,
 
   init: function () {
