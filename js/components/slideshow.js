@@ -88,10 +88,16 @@
     if (!this.data.enabled) { nextButtonEl.classList.add('hidden'); }
     nextButtonEl.setAttribute('title', 'Next Slide');
 
+    this.portraitMessageEl = portraitMessageEl = document.createElement('div');
+    portraitMessageEl.classList.add('a-slideshow-portrait-message');
+    portraitMessageEl.innerHTML = 'Turn your device for slideshow';
+    if (!this.data.enabled) { portraitMessageEl.classList.add('hidden'); }
+
     // Insert elements.
     controlsContainerEl.appendChild(previousButtonEl);
     controlsContainerEl.appendChild(counterEl);
     controlsContainerEl.appendChild(nextButtonEl);
+    controlsContainerEl.appendChild(portraitMessageEl);
 
     nextButtonEl.addEventListener('click', function (evt) {
       self.loadNextSlide();
@@ -130,7 +136,14 @@
       '.a-slideshow-button:active, .a-slideshow-button:hover, .hover {background-color: #ef2d5e;}' +
       '.a-slideshow-counter {align: auto; height: 34px; text-align: center; min-width: 50px; color: #2d2d2d; display: inline-block;}' +
       '.a-slideshow-counter span {line-height: 34px; display: inline-block; vertical-align: middle;}' +
-      '@media (orientation: portrait) { .a-slideshow-container {right: 20px; left: auto}}';
+      '.a-slideshow-portrait-message {display: none}' +
+
+      '@media (orientation: portrait) { ' +
+        '.a-slideshow-portrait-message {display: inline-block; text-align: center; width: 250px; border: 3px solid rgb(51, 51, 51); line-height: 27px; height: 27px; margin-bottom: 2px; border-radius: 10px; background-color: white; }' +
+        '.a-slideshow-container {right: 20px; left: auto; width: 250px}' +
+        '.a-slideshow-button {display: none}' +
+        '.a-slideshow-counter {display: none}' +
+      '}';
     var style = document.createElement('style');
 
     if (style.styleSheet) {
