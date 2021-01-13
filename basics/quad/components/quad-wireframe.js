@@ -10,6 +10,10 @@ AFRAME.registerComponent('quad-wireframe', {
   `,
 
   fragmentShader:`
+    #if __VERSION__ == 100
+      #extension GL_OES_standard_derivatives : enable
+    #endif
+
     varying vec3 vDistanceBarycenter;
 
     // This is like

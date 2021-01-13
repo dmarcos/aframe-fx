@@ -17,7 +17,7 @@
   </head>
   <body>
     <a-scene
-      slideshow="slides: #slide1, #slide2, #slide3; firstSlideIndex: 0; enabled: false"
+      slideshow="slides: #slide1, #slide2, #slide3, #slide4; firstSlideIndex: 0; enabled: false; firstSlideIndex: 3; vrEnabled: false"
       renderer="alpha: false; antialias: false"
       background="color: white"
       info-message="htmlSrc: #messageText">
@@ -85,6 +85,13 @@
           <a-entity sprite-animation scale="1.5 1.5 1" position="-0.4 0 -1"></a-entity>
           <a-entity text="value: Sprite Sheet; color: black" position="0.98 0.6 0"></a-entity>
           <a-entity explosion-sprite-sheet scale="2.2 2.2 1" position="1.4 0 -1"></a-entity>
+        </a-entity>
+      </a-entity>
+
+      <a-entity id="slide4">
+        <a-entity camera position="0 0 1"></a-entity>
+        <a-entity>
+          <a-entity sprite-animation></a-entity>
         </a-entity>
       </a-entity>
 

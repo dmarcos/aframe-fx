@@ -138,11 +138,17 @@
       '.a-slideshow-counter span {line-height: 34px; display: inline-block; vertical-align: middle;}' +
       '.a-slideshow-portrait-message {display: none}' +
 
+      '@media only screen and (max-height: 600px) {' +
+        '.slide h1 {font-size: 12pt;}' +
+        '.slide p {font-size: 8pt;}' +
+      '}' +
+
       '@media (orientation: portrait) { ' +
         '.a-slideshow-portrait-message {display: inline-block; text-align: center; width: 250px; border: 3px solid rgb(51, 51, 51); line-height: 27px; height: 27px; margin-bottom: 2px; border-radius: 10px; background-color: white; }' +
         '.a-slideshow-container {right: 20px; left: auto; width: 250px}' +
         '.a-slideshow-button {display: none}' +
         '.a-slideshow-counter {display: none}' +
+        '.slide {display: none}' +
       '}';
     var style = document.createElement('style');
 
