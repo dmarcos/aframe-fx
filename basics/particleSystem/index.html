@@ -5,43 +5,117 @@
     <title>Quad • A-Frame</title>
     <meta name="description" content="Hello, WebVR! • A-Frame">
     <script src="../../js/vendor/aframe-master.min.js"></script>
+    <script src="../../js/vendor/RGBELoader.js"></script>
+    <script src="../../js/vendor/PMREMGenerator.js"></script>
     <script src="../../js/systems/wireframe.js"></script>
     <script src="../../js/components/slideshow.js"></script>
-    <script src="components/quad-wireframe.js"></script>
-    <script src="components/quad-texture.js"></script>
-    <script src="components/sprite-strip.js"></script>
+    <script src="components/environment-map.js"></script>
+    <script src="components/cloud.js"></script>
+    <script src="components/galaxy.js"></script>
+    <script src="components/fireworks.js"></script>
+    <script src="components/particle-system-shell.js"></script>
+    <script src="components/particle-system-explosion.js"></script>
+    <script src="components/particle-system-wireframe.js"></script>
+    <script src="components/particle-system-instanced.js"></script>
+    <script src="components/particle-system-naive.js"></script>
+    <script src="components/particle-system-flame.js"></script>
   </head>
   <body>
     <a-scene
-      slideshow="slides: #slide1, #slide2; firstSlideIndex: 0; enabled: false"
-      renderer="alpha: false; antialias: false"
+      slideshow="slides: #slide1, #slide2, #slide3, #slide4, #slide5; firstSlideIndex: 0; enabled: false; loadAlwaysFirstSlide: false"
+      renderer="alpha: false; antialias: true"
       background="color: white">
+      <a-assets>
+        <img id="particleImage" src="assets/particle.png" />
+        <img id="particleFlame" src="assets/flame.png" />
+        <img id="particleFirework" src="assets/firework.png" />
+        <a-asset-item id="starship" src="assets/starship.glb"></a-asset-item>
+      </a-assets>
       <a-entity id="slide1">
         <div class="slide">
           <div>
             <h1>Particle System</h1>
-            <p>A particle system is a technique to represent phenomena like smoke, fire, rain, fireworks... Effects that can represented as a cloud of discrete small elements that combanied appear as a single entity or follow some group dynamics. The emitter is a location where the particles are created. Each particle can be rendered in multiple ways. Here we use quads that are always facing the camera also reffered as billboards.</p>
+            <p>A particle system is a technique to represent smoke, fire, rain, fireworks... or any phenomena that can be represented as a cloud of discrete small elements that combined appear as a single entity or follow some group dynamics.</p>
+
+            <p>The emitter is a location where the particles are created. Each particle can be rendered in multiple ways. Here we use quads that are always facing the camera also reffered as billboards.</p>
           </div>
         </div>
         <a-entity camera position="-0.40 0 1"></a-entity>
         <a-entity>
-          <a-entity quad-wireframe></a-entity>
+          <a-entity
+            particle-system-wireframe="particleSize: 0.03; particleSpeed: 0.003; particleLifeTime: 5000"
+            position='0 -0.5 0'></a-entity>
         </a-entity>
       </a-entity>
 
       <a-entity id="slide2">
         <div class="slide">
           <div>
-            <h1>Textured Quad</h1>
-            <p>To create effects quads will be shaded, textured and animated. This is a quad with a texture applied from a sprite sheet. The uv values change to select the desired portion of the image and create the illusion of an animated character.</p>
+            <h1>Particles Texture</h1>
+            <p>We can apply a texture to the particles to simulate different effects</p>
           </div>
         </div>
-        <a-entity camera position="-0.20 0 1"></a-entity>
+         <a-entity camera position="-0.40 0 1"></a-entity>
         <a-entity>
-          <a-entity text="value: Quad; color: black" position="0.15 0.4 0"></a-entity>
-          <a-entity quad-texture scale="0.71 1 1" position="-0.4 0 -1"></a-entity>
-          <a-entity text="value: Sprite Sheet; color: black" position="0.98 0.4 0"></a-entity>
-          <a-entity sprite-strip scale="2.12 1 1" position="1.4 0 -1"></a-entity>
+          <a-entity
+            particle-system-instanced="particleSize: 0.03; src: #particleImage; particleSpeed: 0.002; particleLifeTime: 20000"
+            position='0 0.2 0'></a-entity>
+        </a-entity>
+      </a-entity>
+
+      <a-entity id="slide3">
+        <div class="slide dark">
+          <div>
+            <h1>Multiple Particle Systems</h1>
+            <p>We can make effects composed of multiple particle systems. In this case we have a particle system for the shells and another one for the stars. One the shell particle finishes an event triggers the start of the stars</p>
+          </div>
+        </div>
+         <a-entity camera position="-0.40 0 1"></a-entity>
+        <a-entity>
+          <a-entity
+            fireworks
+            position='0 -0.5 0'></a-entity>
+        </a-entity>
+      </a-entity>
+
+      <a-entity id="slide4" background-color="#7998ba">
+        <div class="slide">
+          <div>
+            <h1>Particles Texture</h1>
+            <p>We can apply a texture to the particles to simulate different effects</p>
+          </div>
+        </div>
+         <a-entity camera position="-0.40 0 1"></a-entity>
+        <a-entity>
+          <a-entity light="type: ambient; intensity: 2.4"></a-entity>
+          <a-entity light="type: directional; intensity: 0.6"></a-entity>
+          <a-entity
+            gltf-model="#starship"
+            environment-map
+            scale="0.012 0.012 0.012"></a-entity>
+          <a-entity
+            particle-system-flame="particleSize: 0.06; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 1800; color: #4768ac; endColor: #c995ea"
+            particle-system-flame__diamond="particleSize: 0.04; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 1800; color: white; modulate: true"
+            particle-system-flame__fire="particleSize: 0.04; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 600; color: #c9604b;"
+            position='0 -0.9 0'></a-entity>
+            <a-entity cloud scale="5 5 1" position="-0.6 1 -1.5"></a-entity>
+            <a-entity cloud="startTime: 2000" scale="5 5 1" position="1.8 1 -1.5">
+          </a-entity>
+        </a-entity>
+      </a-entity>
+
+      <a-entity id="slide5">
+        <div class="slide dark">
+          <div>
+            <h1>Galaxy</h1>
+            <p></p>
+          </div>
+        </div>
+         <a-entity camera position="-0.40 0 1"></a-entity>
+        <a-entity>
+          <a-entity
+            galaxy="particleSize: 0.005; src: #particleFirework; particleSpeed: 0.002;"
+            position='0 -0.5 0'></a-entity>
         </a-entity>
       </a-entity>
 

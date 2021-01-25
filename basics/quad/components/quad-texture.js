@@ -84,7 +84,7 @@ AFRAME.registerComponent('quad-texture', {
     textureLoader.load('assets/mario-sprite.png', function (texture) {
       shader.uniforms.uMap.value = texture;
       texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
-      texture.magFilfer = THREE.NearestFilter;
+      texture.magFilfer = THREE.LinearFilter;
     });
   },
 

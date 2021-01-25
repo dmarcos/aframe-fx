@@ -60,6 +60,6 @@ AFRAME.registerSystem('wireframe', {
         0, 0, 1
       );
     };
-    geometry.addAttribute('barycentric', new THREE.Float32BufferAttribute(barycenters, 3));
+    geometry.setAttribute('barycentric', new THREE.Float32BufferAttribute(barycenters, 3));
   }
 });
