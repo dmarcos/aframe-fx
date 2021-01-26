@@ -1,6 +1,6 @@
 AFRAME.registerComponent('galaxy', {
   schema: {
-    particlesNumber: {default: 14000},
+    particlesNumber: {default: 20000},
     particleSize: {default: 0.1},
     particleSpeed: {default: 0.005},
     particleLifeTime: {default: 1000},
@@ -39,9 +39,9 @@ AFRAME.registerComponent('galaxy', {
     var layers = 28;
     var particlesPerLayer = particlesNumber / layers;
 
-    var distanceBetweenLayers = 0.004;
-    var a = 0.03 + distanceBetweenLayers*layers;
-    var b = 0.01 + distanceBetweenLayers*layers;
+    var distanceBetweenLayers = 0.0028;
+    var a = 0.03 + distanceBetweenLayers*(layers-11);
+    var b = 0.01 + distanceBetweenLayers*(layers-11);
 
     var geometry = this.initQuadGeometry();
     var shader = this.initQuadShader();
@@ -52,37 +52,25 @@ AFRAME.registerComponent('galaxy', {
     var randomA;
     var randomB;
     this.particlesInfo = [];
+    var particlesNumber;
 
     for (var i = 0; i < layers; i++) {
       pivot = new THREE.Object3D();
       pivot.position.set(0, 0.5, 0);
       pivot.rotation.set(0, 0, layerRotation);
       pivot.updateMatrixWorld();
-      for (var j = 0; j < particlesPerLayer; j++) {
+      particlesNumber = particlesPerLayer - (layers - i) * 12;
+      for (var j = 0; j < particlesNumber; j++) {
         initialParticlePosition = 2 * Math.PI * Math.random();
         //initialParticlePosition = j * 2 * Math.PI / particlesPerLayer;
         randomA = Math.random() < 0.5 ? Math.random() * distanceBetweenLayers : -Math.random() * distanceBetweenLayers;
         randomB = Math.random() < 0.5 ? Math.random() * distanceBetweenLayers : -Math.random() * distanceBetweenLayers;
         this.initParticle(a + randomA, b + randomB, initialParticlePosition, pivot);
       }
-
-      layerRotation += Math.PI / 20.0;
+      layerRotation += Math.PI / 15.0; // 20 minimal winding.
       a -= distanceBetweenLayers;
-      b -= distanceBetweenLayers;
-    }
-
-    // core
-    for (;a > 0 && b > 0;) {
-      debugger;
-      for (var j = 0; j < particlesPerLayer; j++) {
-        initialParticlePosition = 2 * Math.PI * Math.random();
-        //initialParticlePosition = j * 2 * Math.PI / particlesPerLayer;
-        randomA = Math.random() < 0.5 ? Math.random() * distanceBetweenLayers : -Math.random() * distanceBetweenLayers;
-        randomB = Math.random() < 0.5 ? Math.random() * distanceBetweenLayers : -Math.random() * distanceBetweenLayers;
-        this.initParticle(a + randomA, b + randomB, initialParticlePosition, pivot);
-      }
-      a -= distanceBetweenLayers;
-      b -= distanceBetweenLayers;
+      b -= distanceBetweenLayers - 0.0007;
+      console.log("CACA " + a + " " + b);
     }
 
     this.el.setObject3D('particleInstanced', mesh);
@@ -152,7 +140,7 @@ AFRAME.registerComponent('galaxy', {
     for (var i = 0; i < this.particlesInfo.length; i++) {
       particleInfo = this.particlesInfo[i];
       particleInfo.object3D.position.y = particleInfo.b * Math.cos(particleInfo.angle);
-      particleInfo.object3D.position.x = particleInfo.a * Math.sin(particleInfo.angle);;
+      particleInfo.object3D.position.x = particleInfo.a * Math.sin(particleInfo.angle);
       particleInfo.angle -= 2 * Math.PI / 500;
       this.visibleAttribute.setX(i, 1.0);
       particleInfo.object3D.updateMatrixWorld(true);
