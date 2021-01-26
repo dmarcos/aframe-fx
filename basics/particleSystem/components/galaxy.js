@@ -35,19 +35,19 @@ AFRAME.registerComponent('galaxy', {
     }`,
 
   init: function () {
-    var a = 0.10;
-    //var b = 0.025;
-    var b = 0.025;
-
     var particlesNumber = this.data.particlesNumber;
     var layers = 28;
     var particlesPerLayer = particlesNumber / layers;
+
+    var distanceBetweenLayers = 0.004;
+    var a = 0.03 + distanceBetweenLayers*layers;
+    var b = 0.01 + distanceBetweenLayers*layers;
 
     var geometry = this.initQuadGeometry();
     var shader = this.initQuadShader();
     var mesh = this.instancedMesh = new THREE.InstancedMesh(geometry, shader, particlesNumber);
     var pivot;
-    var layerRotation = -Math.PI / 3;
+    var layerRotation = 0;
     var initialParticlePosition;
     var randomA;
     var randomB;
@@ -56,18 +56,33 @@ AFRAME.registerComponent('galaxy', {
     for (var i = 0; i < layers; i++) {
       pivot = new THREE.Object3D();
       pivot.position.set(0, 0.5, 0);
-      pivot.rotation.set(0, 0, -layerRotation);
+      pivot.rotation.set(0, 0, layerRotation);
       pivot.updateMatrixWorld();
       for (var j = 0; j < particlesPerLayer; j++) {
         initialParticlePosition = 2 * Math.PI * Math.random();
-        randomA = Math.random() < 0.5 ? Math.random() * 0.01 : -Math.random() * 0.01;
-        randomB = Math.random() < 0.5 ? Math.random() * 0.01 : -Math.random() * 0.01;
+        //initialParticlePosition = j * 2 * Math.PI / particlesPerLayer;
+        randomA = Math.random() < 0.5 ? Math.random() * distanceBetweenLayers : -Math.random() * distanceBetweenLayers;
+        randomB = Math.random() < 0.5 ? Math.random() * distanceBetweenLayers : -Math.random() * distanceBetweenLayers;
         this.initParticle(a + randomA, b + randomB, initialParticlePosition, pivot);
       }
 
       layerRotation += Math.PI / 20.0;
-      a += 0.01;
-      b += 0.01;
+      a -= distanceBetweenLayers;
+      b -= distanceBetweenLayers;
+    }
+
+    // core
+    for (;a > 0 && b > 0;) {
+      debugger;
+      for (var j = 0; j < particlesPerLayer; j++) {
+        initialParticlePosition = 2 * Math.PI * Math.random();
+        //initialParticlePosition = j * 2 * Math.PI / particlesPerLayer;
+        randomA = Math.random() < 0.5 ? Math.random() * distanceBetweenLayers : -Math.random() * distanceBetweenLayers;
+        randomB = Math.random() < 0.5 ? Math.random() * distanceBetweenLayers : -Math.random() * distanceBetweenLayers;
+        this.initParticle(a + randomA, b + randomB, initialParticlePosition, pivot);
+      }
+      a -= distanceBetweenLayers;
+      b -= distanceBetweenLayers;
     }
 
     this.el.setObject3D('particleInstanced', mesh);
