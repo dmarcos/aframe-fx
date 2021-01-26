@@ -1,6 +1,6 @@
 AFRAME.registerComponent('galaxy', {
   schema: {
-    particlesNumber: {default: 20000},
+    particlesNumber: {default: 14000},
     particleSize: {default: 0.1},
     particleSpeed: {default: 0.005},
     particleLifeTime: {default: 1000},
@@ -35,18 +35,22 @@ AFRAME.registerComponent('galaxy', {
     }`,
 
   init: function () {
-    var a = 0.20;
-    var b = 0.05;
+    var a = 0.10;
+    //var b = 0.025;
+    var b = 0.025;
+
     var particlesNumber = this.data.particlesNumber;
-    var layers = 160;
+    var layers = 28;
     var particlesPerLayer = particlesNumber / layers;
 
     var geometry = this.initQuadGeometry();
     var shader = this.initQuadShader();
     var mesh = this.instancedMesh = new THREE.InstancedMesh(geometry, shader, particlesNumber);
     var pivot;
-    var layerRotation = 0;
+    var layerRotation = -Math.PI / 3;
     var initialParticlePosition;
+    var randomA;
+    var randomB;
     this.particlesInfo = [];
 
     for (var i = 0; i < layers; i++) {
@@ -54,14 +58,16 @@ AFRAME.registerComponent('galaxy', {
       pivot.position.set(0, 0.5, 0);
       pivot.rotation.set(0, 0, -layerRotation);
       pivot.updateMatrixWorld();
-
       for (var j = 0; j < particlesPerLayer; j++) {
-        initialParticlePosition = -(2 * Math.PI / particlesPerLayer) * j * Math.random();
-        this.initParticle(a, b, -(2 * Math.PI / particlesPerLayer) * j, pivot);
+        initialParticlePosition = 2 * Math.PI * Math.random();
+        randomA = Math.random() < 0.5 ? Math.random() * 0.01 : -Math.random() * 0.01;
+        randomB = Math.random() < 0.5 ? Math.random() * 0.01 : -Math.random() * 0.01;
+        this.initParticle(a + randomA, b + randomB, initialParticlePosition, pivot);
       }
-      layerRotation += 2*Math.PI / layers;
-      a += 0.0025;
-      b += 0.0025;
+
+      layerRotation += Math.PI / 20.0;
+      a += 0.01;
+      b += 0.01;
     }
 
     this.el.setObject3D('particleInstanced', mesh);
@@ -132,7 +138,7 @@ AFRAME.registerComponent('galaxy', {
       particleInfo = this.particlesInfo[i];
       particleInfo.object3D.position.y = particleInfo.b * Math.cos(particleInfo.angle);
       particleInfo.object3D.position.x = particleInfo.a * Math.sin(particleInfo.angle);;
-      particleInfo.angle -= 2 * Math.PI / 100;
+      particleInfo.angle -= 2 * Math.PI / 500;
       this.visibleAttribute.setX(i, 1.0);
       particleInfo.object3D.updateMatrixWorld(true);
       this.instancedMesh.setMatrixAt(i, particleInfo.object3D.matrixWorld);
