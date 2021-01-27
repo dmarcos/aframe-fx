@@ -19,6 +19,7 @@
     <script src="components/particle-system-naive-wireframe.js"></script>
     <script src="components/particle-system-instanced.js"></script>
     <script src="components/particle-system-rocket-exhaust.js"></script>
+    <script src="components/swap-entities.js"></script>
   </head>
   <body>
     <a-scene
@@ -35,7 +36,7 @@
         <div class="slide">
           <div>
             <h1>Particle System</h1>
-            <p>A particle system is a technique to represent smoke, fire, rain, fireworks... Usually phenomena composed of many small discrete elements that combined appear as a single entity or follow some group dynamics.</p>
+            <p>A particle system is a technique to represent smoke, fire, rain, fireworks... Usually phenomena composed of many small discrete elements that combined appear as a single entity or follow some common dynamics.</p>
 
             <p>The emitter is a location where the particles are created. Usually each particle has a time counter, recycled once expired and then reemitted for good use of resources.
             </p>
@@ -60,7 +61,7 @@
             <h1>Particles Texture</h1>
             <p>We can apply a texture to a particle to change its appereance and simulate the desired effect.</p>
 
-            <p>This example renders the quads using a technique called <a href="https://webglfundamentals.org/webgl/lessons/webgl-instanced-drawing.html">instanced drawing</a> to reduce the number of draw calls</p>
+            <p>This example renders the quads using a technique called <a href="https://webglfundamentals.org/webgl/lessons/webgl-instanced-drawing.html">instanced drawing</a> to reduce the number of draw calls. Compare the number with the previous example.</p>
 
             <p>Draw Calls: <strong id='instancedParticleSystem'>0</strong></p>
           </div>
@@ -73,26 +74,11 @@
         </a-entity>
       </a-entity>
 
-      <a-entity id="slide3">
-        <div class="slide dark">
-          <div>
-            <h1>Multiple Particle Systems</h1>
-            <p>We can make effects composed of multiple particle systems. In this case we have a particle system for the shells and another one for the stars. One the shell particle finishes an event triggers the start of the stars</p>
-          </div>
-        </div>
-         <a-entity camera position="-0.40 0 1"></a-entity>
-        <a-entity>
-          <a-entity
-            fireworks
-            position='0 -0.5 0'></a-entity>
-        </a-entity>
-      </a-entity>
-
-      <a-entity id="slide4" background-color="#7998ba">
+      <a-entity id="slide3" background-color="#7998ba">
         <div class="slide">
           <div>
-            <h1>Particles Texture</h1>
-            <p>We can apply a texture to the particles to simulate different effects</p>
+            <h1>Combine Particle Systems</h1>
+            <p>Multiple particle systems can be combined to create a single effect. This is a crude representation of the <a href="https://en.wikipedia.org/wiki/SpaceX_Raptor">SpaceX Raptor engine </a> exhaust. We use 3 particle systems: One for the brighter exhaust coming out from the nozzle, one for the purple plume and a last one to represent the <a href="https://en.wikipedia.org/wiki/Shock_diamond"></a></p>
           </div>
         </div>
          <a-entity camera position="-0.40 0 1"></a-entity>
@@ -104,13 +90,28 @@
             environment-map
             scale="0.012 0.012 0.012"></a-entity>
           <a-entity
-            particle-system-rocket-exhaust="particleSize: 0.06; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 1800; color: #4768ac; endColor: #c995ea"
-            particle-system-rocket-exhaust__diamond="particleSize: 0.04; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 1800; color: white; modulate: true"
-            particle-system-rocket-exhaust__fire="particleSize: 0.04; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 600; color: #c9604b;"
+            particle-system-rocket-exhaust="particleSize: 0.08; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 2200; color: #4768ac; endColor: #c995ea; animateColor: true; endScaleFactor: 0.5"
+            particle-system-rocket-exhaust__diamond="particleSize: 0.05; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 2200; color: white; shockDiamonds: true"
+            particle-system-rocket-exhaust__fire="particleSize: 0.05; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 600; color: #c3da56; animateColor: true"
             position='0 -0.9 0'></a-entity>
             <a-entity cloud scale="5 5 1" position="-0.6 1 -1.5"></a-entity>
             <a-entity cloud="startTime: 2000" scale="5 5 1" position="1.8 1 -1.5">
           </a-entity>
+        </a-entity>
+      </a-entity>
+
+      <a-entity id="slide4">
+        <div class="slide dark">
+          <div>
+            <h1>Chain Particle Systems</h1>
+            <p>We can make effects composed of multiple particle systems. In this case we have a particle system for the shells and another one for the stars. One the shell particle finishes an event triggers the start of the firework stars</p>
+          </div>
+        </div>
+         <a-entity camera position="-0.40 0 1"></a-entity>
+        <a-entity>
+          <a-entity
+            fireworks
+            position='0 -0.5 0'></a-entity>
         </a-entity>
       </a-entity>
 
@@ -119,18 +120,24 @@
           <div>
             <h1>Complex Particle Behavior</h1>
             <p>Redefine the init and tick methods to animate the particles. A few lines of code can describe very complex behavior</p>
-            <p>This is an interpretation of the <a href="https://en.wikipedia.org/wiki/Density_wave_theory">Density Wave Theory</a> that describes how the structure of spiral galaxies is formed. Notice that while the galaxy rotates the arms remain static
-            <p><strong>tl:dr</strong> Arms are formed by matter rotating in overlapping concentric eliptical orbits. </p>
+            <p>This is an interpretation of the <a href="https://en.wikipedia.org/wiki/Density_wave_theory">Density Wave Theory</a> that describes how the structure of spiral galaxies is formed. Observe how the galaxy rotates while the arms remain static. This is due to matter (planets, stars, dust...) going around in overlapping concentric eliptical orbits.</p>
+            <p><a id="toggleOrbits" href="#" style="margin: auto">TOGGLE ORBITS</a></p>
           </div>
         </div>
          <a-entity camera position="-0.05 0 0.125"></a-entity>
         <a-entity>
-          <a-entity
-            galaxy="particleSize: 0.0006; src: #particleFirework; particleSpeed: 0.002;"
-            position='0 -0.5 0'></a-entity>
+          <a-entity swap-entities="toggleButton: #toggleOrbits; entity1: #galaxy; entity2: #galaxyOrbits">
+            <a-entity
+              id = "galaxy"
+              galaxy="particleSize: 0.0006; src: #particleFirework; particleSpeed: 0.002;"
+              position='0 -0.5 0'></a-entity>
+            <a-entity
+              id = "galaxyOrbits"
+              galaxy="particleSize: 0.0006; src: #particleFirework; particleSpeed: 0.002; showOrbits: true"
+              position='0 -0.5 0' visible="false"></a-entity>
+          </a-entity>
         </a-entity>
       </a-entity>
-
     </a-scene>
   </body>
 </html>

@@ -2,7 +2,8 @@ AFRAME.registerComponent('galaxy', {
   schema: {
     particlesNumber: {default: 20000},
     particleSize: {default: 0.1},
-    src: {type: 'map'}
+    src: {type: 'map'},
+    showOrbits: {default: false}
   },
   vertexShader:`
     attribute float visible;
@@ -47,8 +48,8 @@ AFRAME.registerComponent('galaxy', {
     var pivot;
     var layerRotation = 0;
     var initialParticlePosition;
-    var randomA;
-    var randomB;
+    var randomA = 0;
+    var randomB = 0;
     this.particlesInfo = [];
     var particlesNumber;
 
@@ -57,12 +58,15 @@ AFRAME.registerComponent('galaxy', {
       pivot.position.set(0, 0.5, 0);
       pivot.rotation.set(0, 0, layerRotation);
       pivot.updateMatrixWorld();
-      particlesNumber = particlesPerLayer - (layers - i) * 12;
+      particlesNumber = this.data.showOrbits ? particlesPerLayer : particlesPerLayer - (layers - i) * 12;
       for (var j = 0; j < particlesNumber; j++) {
-        initialParticlePosition = 2 * Math.PI * Math.random();
-        //initialParticlePosition = j * 2 * Math.PI / particlesPerLayer;
-        randomA = Math.random() < 0.5 ? Math.random() * distanceBetweenLayers : -Math.random() * distanceBetweenLayers;
-        randomB = Math.random() < 0.5 ? Math.random() * distanceBetweenLayers : -Math.random() * distanceBetweenLayers;
+        if (this.data.showOrbits) {
+          initialParticlePosition = 2 * Math.PI * j / particlesNumber;
+        } else {
+          initialParticlePosition = 2 * Math.PI * Math.random();
+          randomA = Math.random() < 0.5 ? Math.random() * distanceBetweenLayers : -Math.random() * distanceBetweenLayers;
+          randomB = Math.random() < 0.5 ? Math.random() * distanceBetweenLayers : -Math.random() * distanceBetweenLayers;
+        }
         this.initParticle(a + randomA, b + randomB, initialParticlePosition, pivot);
       }
       layerRotation += Math.PI / 15.0; // 20 minimal winding.

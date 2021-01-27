@@ -7,7 +7,9 @@ AFRAME.registerComponent('particle-system-rocket-exhaust', {
     src: {type: 'map'},
     color: {default: 'white', type: 'color'},
     endColor: {default: 'white', type: 'color'},
-    modulate: {default: false}
+    animateColor: {default: false},
+    shockDiamonds: {default: false},
+    endScaleFactor: {default: 1.0}
   },
 
   multiple: true,
@@ -127,6 +129,7 @@ AFRAME.registerComponent('particle-system-rocket-exhaust', {
     var positions;
     var quad;
     var particleSpeed = this.data.particleSpeed;
+    var scale;
 
     this.lastParticleDelta = this.lastParticleDelta || 0;
     this.lastParticleDelta += delta;
@@ -134,23 +137,30 @@ AFRAME.registerComponent('particle-system-rocket-exhaust', {
       quad = this.quads[i];
       quad.particleLifeTime -= delta;
 
+      // Reset particle.
       if (quad.particleLifeTime < 0) {
         quad.particleLifeTime = 0;
         this.visibleAttribute.setX(i, 0.0);
       }
 
+
       if (quad.particleLifeTime) {
-        if (this.data.modulate) {
-          quad.object3D.scale.x = 0.8 * (quad.particleLifeTime / this.data.particleLifeTime)  * (1 + Math.sin(2 * Math.PI * 8 * (quad.particleLifeTime / 1000)));
-        } else {
+        if (this.data.shockDiamonds) {
+          quad.object3D.scale.x = 0.8 * (quad.particleLifeTime / this.data.particleLifeTime)  * (1 + Math.sin(2 * Math.PI * 8 * (quad.particleLifeTime / 1600)));
+        }
+        if (this.data.animateColor) {
           quad.lerpColor.lerp(this.endColor, 1 - (quad.particleLifeTime / this.data.particleLifeTime));
           this.colorAttribute.setX(i, quad.lerpColor.r);
           this.colorAttribute.setY(i, quad.lerpColor.g);
           this.colorAttribute.setZ(i, quad.lerpColor.b);
           quad.lerpColor = this.startColor.clone();
         }
+        if (this.data.endScaleFactor !== 1.0) {
+          scale = (1 - this.data.endScaleFactor) * (quad.particleLifeTime / this.data.particleLifeTime) + this.data.endScaleFactor;
+          quad.object3D.scale.x = scale;
+          quad.object3D.scale.y = scale;
+        }
       }
-
       quad.object3D.position.y -= particleSpeed;
       quad.object3D.updateMatrix();
       this.instancedMesh.setMatrixAt(i, quad.object3D.matrix);

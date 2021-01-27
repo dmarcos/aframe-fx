@@ -62,8 +62,9 @@
       if (backgroundColor) {
         slide.style.backgroundColor = backgroundColor;
         slide.style.color = 'white';
+        counterTextEl.style.color = 'white';
         slide.style.borderRight = '1px solid white';
-        slide.style.textShadow = '1px 1px black';
+        //slide.style.textShadow = '1px 1px black';
         sceneEl.setAttribute('background', 'color', backgroundColor);
       } else {
         slide.style.color = '';
@@ -157,6 +158,7 @@
       '.slide h1 {font-size: 20pt; marging: 50%; text-align: right;}' +
       '.slide p {font-size: 12pt; text-align: justify;}' +
       '.slide.dark {background-color: black; color: white}' +
+      '.slide.dark a{color: #ea80fc}' +
 
       '.a-slideshow-container {display:flex; position: absolute; left: calc(50% - 105px); bottom: 20px; width: 210px;}' +
       //'.a-slideshow-container .hidden {display: none}' +

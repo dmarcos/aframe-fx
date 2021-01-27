@@ -1,5 +1,6 @@
 AFRAME.registerComponent('particle-system-naive-wireframe', {
   schema: {
+    particleRate: {default: 50},
     particleSize: {default: 0.1},
     particleSpeed: {default: 0.005},
     particleLifeTime: {default: 1000},
@@ -126,7 +127,8 @@ AFRAME.registerComponent('particle-system-naive-wireframe', {
       geometry.attributes.position.needsUpdate = true;
     }
 
-    if (this.lastParticleDelta > 50) {
+    // Emits a new particle.
+    if (this.lastParticleDelta > this.data.particleRate) {
       for (var i = 0; i < this.quads.length; i++) {
         quad = this.quads[i];
         if (quad.mesh.visible) { continue; }

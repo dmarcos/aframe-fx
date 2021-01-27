@@ -1,5 +1,6 @@
 AFRAME.registerComponent('particle-system-instanced', {
   schema: {
+    particleRate: {default: 50},
     particlesNumber: {default: 1000},
     particleSize: {default: 0.1},
     particleSpeed: {default: 0.005},
@@ -45,30 +46,30 @@ AFRAME.registerComponent('particle-system-instanced', {
     var shader = this.initQuadShader();
     var mesh = this.instancedMesh = new THREE.InstancedMesh(geometry, shader, particlesNumber);
 
-    this.quads = [];
+    this.particlesInfo = [];
     for (var i = 0; i < particlesNumber; i++) {
       sign = Math.floor(Math.random() * 2) === 0 ? 1 : -1;
       positionX = sign * Math.random();
       sign = Math.floor(Math.random() * 2) === 0 ? 1 : -1;
       positionY = sign * Math.random();
       positionZ = 0.6 * Math.random();
-      this.addQuad(positionX / 2, 1, -positionZ);
+      this.addParticle(positionX / 2, 1, -positionZ);
     }
 
     this.el.setObject3D('particleInstanced', mesh);
   },
 
-  addQuad: function(x, y, z) {
+  addParticle: function(x, y, z) {
     var mesh;
-    var quad = {};
+    var particleInfo = {};
     var sign = Math.floor(Math.random() * 2) === 0 ? 1 : -1;
 
-    quad.object3D = new THREE.Object3D();
-    quad.object3D.position.set(x, y, z);
-    quad.xPosition = x;
-    quad.xSpeed = sign * Math.random() * 0.0003;
-    quad.lifeTime = 0;
-    this.quads.push(quad);
+    particleInfo.object3D = new THREE.Object3D();
+    particleInfo.object3D.position.set(x, y, z);
+    particleInfo.xPosition = x;
+    particleInfo.xSpeed = sign * Math.random() * 0.0003;
+    particleInfo.lifeTime = 0;
+    this.particlesInfo.push(particleInfo);
   },
 
   initQuadGeometry: function () {
@@ -114,40 +115,44 @@ AFRAME.registerComponent('particle-system-instanced', {
   tick: function (time, delta) {
     var geometry;
     var positions;
-    var quad;
+    var particleInfo;
     var particleSpeed = this.data.particleSpeed;
 
     this.lastParticleDelta = this.lastParticleDelta || 0;
     this.lastParticleDelta += delta;
-    for (var i = 0; i < this.quads.length; i++) {
-      quad = this.quads[i];
-      quad.particleLifeTime -= delta;
+    for (var i = 0; i < this.particlesInfo.length; i++) {
+      particleInfo = this.particlesInfo[i];
+      particleInfo.particleLifeTime -= delta;
 
-      if (quad.particleLifeTime < 0) {
-        quad.particleLifeTime = 0;
+      // Reset and hide particle.
+      if (particleInfo.particleLifeTime < 0) {
+        particleInfo.particleLifeTime = 0;
         this.el.emit('particleended');
         this.visibleAttribute.setX(i, 0.0);
       }
-      quad.object3D.position.y -= particleSpeed;
-      quad.object3D.position.x += quad.xSpeed;
-      quad.object3D.updateMatrix();
-      this.instancedMesh.setMatrixAt(i, quad.object3D.matrix);
+
+      particleInfo.object3D.position.y -= particleSpeed;
+      particleInfo.object3D.position.x += particleInfo.xSpeed;
+      particleInfo.object3D.updateMatrix();
+      this.instancedMesh.setMatrixAt(i, particleInfo.object3D.matrix);
     }
 
-    if (this.lastParticleDelta > 50) {
-      for (var i = 0; i < this.quads.length; i++) {
-        quad = this.quads[i];
-        if (quad.particleLifeTime) { continue; }
+    // Emit a new particle
+    if (this.lastParticleDelta > this.data.particleRate) {
+      for (var i = 0; i < this.particlesInfo.length; i++) {
+        particleInfo = this.particlesInfo[i];
 
-        this.velocityAttribute
-        quad.particleLifeTime = this.data.particleLifeTime;
-        quad.object3D.position.y = 1;
-        quad.object3D.position.x = quad.xPosition;
-        quad.object3D.updateMatrix();
+        // Skip if the particle is in use.
+        if (particleInfo.particleLifeTime) { continue; }
+
+        particleInfo.particleLifeTime = this.data.particleLifeTime;
+        particleInfo.object3D.position.y = 1;
+        particleInfo.object3D.position.x = particleInfo.xPosition;
+        particleInfo.object3D.updateMatrix();
 
         this.visibleAttribute.setX(i, 1.0);
         this.el.emit('particlestarted');
-        this.instancedMesh.setMatrixAt(i, quad.object3D.matrix);
+        this.instancedMesh.setMatrixAt(i, particleInfo.object3D.matrix);
         break;
       }
       this.lastParticleDelta = 0;
@@ -158,10 +163,10 @@ AFRAME.registerComponent('particle-system-instanced', {
   },
 
   update: function (oldData) {
-    if (oldData.src !== this.data.src) { this.loadQuadImage(); }
+    if (oldData.src !== this.data.src) { this.loadTextureImage(); }
   },
 
-  loadQuadImage: function () {
+  loadTextureImage: function () {
     var src = this.data.src;
     var self = this;
     this.el.sceneEl.systems.material.loadTexture(src, {src: src}, function textureLoaded (texture) {
