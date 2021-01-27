@@ -6,13 +6,11 @@ AFRAME.registerComponent('galaxy', {
     showOrbits: {default: false}
   },
   vertexShader:`
-    attribute float visible;
     varying vec2 vUv;
     varying float vVisible;
 
     void main() {
       vUv = uv;
-      vVisible = visible;
       vec4 mvPosition = instanceMatrix * vec4( position, 1.0 );
       vec4 modelViewPosition = modelViewMatrix * mvPosition;
       gl_Position = projectionMatrix * modelViewPosition;
@@ -20,17 +18,11 @@ AFRAME.registerComponent('galaxy', {
   `,
 
   fragmentShader:`
-    varying float vVisible;
     varying vec2 vUv;
     uniform sampler2D uMap;
 
     void main() {
-      if (vVisible == 1.0) {
-        gl_FragColor = texture2D(uMap, vUv);
-      } else {
-        discard;
-      }
-
+      gl_FragColor = texture2D(uMap, vUv);
     }`,
 
   init: function () {
@@ -120,13 +112,8 @@ AFRAME.registerComponent('galaxy', {
       1, 1,
     ];
 
-    var visible = Array(this.data.particlesNumber).fill(0.0);
-
-    var visibleAttribute = this.visibleAttribute = new THREE.InstancedBufferAttribute(new Float32Array(visible), 1);
-
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, vertexCoordinateSize));
     geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, uvCoordinateSize));
-    geometry.setAttribute('visible', visibleAttribute);
     return geometry;
   },
 
@@ -142,13 +129,11 @@ AFRAME.registerComponent('galaxy', {
       particleInfo.object3D.position.y = particleInfo.b * Math.cos(particleInfo.angle);
       particleInfo.object3D.position.x = particleInfo.a * Math.sin(particleInfo.angle);
       particleInfo.angle -= 2 * Math.PI / 500;
-      this.visibleAttribute.setX(i, 1.0);
       particleInfo.object3D.updateMatrixWorld(true);
       this.instancedMesh.setMatrixAt(i, particleInfo.object3D.matrixWorld);
     }
 
     this.instancedMesh.instanceMatrix.needsUpdate = true;
-    this.visibleAttribute.needsUpdate = true;
   },
 
   update: function (oldData) {

@@ -9,6 +9,7 @@
     <script src="../../js/vendor/PMREMGenerator.js"></script>
     <script src="../../js/systems/wireframe.js"></script>
     <script src="../../js/components/slideshow.js"></script>
+    <script src="../../js/components/info-message.js"></script>
     <script src="components/environment-map.js"></script>
     <script src="components/cloud.js"></script>
     <script src="components/drawcalls.js"></script>
@@ -25,12 +26,14 @@
     <a-scene
       slideshow="slides: #slide1, #slide2, #slide3, #slide4, #slide5; firstSlideIndex: 0; enabled: false; loadAlwaysFirstSlide: false"
       renderer="alpha: false; antialias: true"
-      background="color: white">
+      background="color: white"
+      info-message="htmlSrc: #messageText">
       <a-assets>
         <img id="particleImage" src="assets/particle.png" />
         <img id="particleFlame" src="assets/flame.png" />
         <img id="particleFirework" src="assets/firework.png" />
         <a-asset-item id="starship" src="assets/starship.glb"></a-asset-item>
+        <a-asset-item id="messageText" src="assets/message.html"></a-asset-item>
       </a-assets>
       <a-entity id="slide1">
         <div class="slide">
@@ -38,11 +41,11 @@
             <h1>Particle System</h1>
             <p>A particle system is a technique to represent smoke, fire, rain, fireworks... Usually phenomena composed of many small discrete elements that combined appear as a single entity or follow some common dynamics.</p>
 
-            <p>The emitter is a location where the particles are created. Usually each particle has a time counter, recycled once expired and then reemitted for good use of resources.
+            <p>The emitter is a location where the particles are created. Usually each particle has a time counter. When the timer expires the particle is recycled and eventually reemitted as a new particle.
             </p>
 
             <p>
-            Each particle can be rendered in multiple ways. This example renders individual <a href="http://localhost:8080/basics/quad/#0">quads</a>. This results in a drawcall per particle which is very inefficient but keeps the code simple for illustration purposes.</p>
+            We can render particles in multiple ways. This example renders individual <a href="http://localhost:8080/basics/quad/#0">quads</a>. This results in a drawcall per particle which is very inefficient but <a href="https://github.com/dmarcos/aframe-fx/blob/master/basics/particleSystem/components/particle-system-naive-wireframe.js">keeps the code simple for illustration purposes.</a></p>
 
             <p>Draw Calls: <strong id='naiveParticleSystem'>0</strong></p>
           </div>
@@ -61,7 +64,7 @@
             <h1>Particles Texture</h1>
             <p>We can apply a texture to a particle to change its appereance and simulate the desired effect.</p>
 
-            <p>This example renders the quads using a technique called <a href="https://webglfundamentals.org/webgl/lessons/webgl-instanced-drawing.html">instanced drawing</a> to reduce the number of draw calls. Compare the number with the previous example.</p>
+            <p><a href="https://github.com/dmarcos/aframe-fx/blob/master/basics/particleSystem/components/particle-system-instanced.js">This example</a> renders the quads using a technique called <a href="https://webglfundamentals.org/webgl/lessons/webgl-instanced-drawing.html">instanced drawing</a> to reduce the number of draw calls. Compare the number with the previous example.</p>
 
             <p>Draw Calls: <strong id='instancedParticleSystem'>0</strong></p>
           </div>
@@ -78,7 +81,7 @@
         <div class="slide">
           <div>
             <h1>Combine Particle Systems</h1>
-            <p>Multiple particle systems can be combined to create a single effect. This is a crude representation of the <a href="https://en.wikipedia.org/wiki/SpaceX_Raptor">SpaceX Raptor engine </a> exhaust. We use 3 particle systems: One for the brighter exhaust coming out from the nozzle, one for the purple plume and a last one to represent the <a href="https://en.wikipedia.org/wiki/Shock_diamond"></a></p>
+            <p><a href="https://github.com/dmarcos/aframe-fx/blob/master/basics/particleSystem/index.html#L92">Multiple particle systems</a> can be combined to create a single effect. This is a crude representation of the <a href="https://en.wikipedia.org/wiki/SpaceX_Raptor">SpaceX Raptor engine </a> exhaust. We use 3 <a href="https://github.com/dmarcos/aframe-fx/blob/master/basics/particleSystem/components/particle-system-rocket-exhaust.js">particle systems</a>: One for the brighter exhaust coming out from the nozzle, one for the purple plume and a last one to represent the <a href="https://en.wikipedia.org/wiki/Shock_diamond">shock diamonds</a></p>
           </div>
         </div>
          <a-entity camera position="-0.40 0 1"></a-entity>
@@ -120,7 +123,7 @@
           <div>
             <h1>Complex Particle Behavior</h1>
             <p>Redefine the init and tick methods to animate the particles. A few lines of code can describe very complex behavior</p>
-            <p>This is an interpretation of the <a href="https://en.wikipedia.org/wiki/Density_wave_theory">Density Wave Theory</a> that describes how the structure of spiral galaxies is formed. Observe how the galaxy rotates while the arms remain static. This is due to matter (planets, stars, dust...) going around in overlapping concentric eliptical orbits.</p>
+            <p>This <a href="https://github.com/dmarcos/aframe-fx/blob/master/basics/particleSystem/components/galaxy.js">particle system</a> is a simplification of the <a href="https://en.wikipedia.org/wiki/Density_wave_theory">Density Wave Theory</a> that describes how the structure of spiral galaxies is formed. The galaxy rotates while the arms remain static. This is due to matter (planets, stars, dust...) going around in overlapping concentric eliptical orbits.</p>
             <p><a id="toggleOrbits" href="#" style="margin: auto">TOGGLE ORBITS</a></p>
           </div>
         </div>
