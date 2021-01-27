@@ -58,17 +58,19 @@
       counterTextEl.style.color = '';
     }
 
-    if (backgroundColor) {
-      slide.style.backgroundColor = backgroundColor;
-      slide.style.color = 'white';
-      slide.style.borderRight = '1px solid white';
-      slide.style.textShadow = '1px 1px black';
-      sceneEl.setAttribute('background', 'color', backgroundColor);
-    } else {
-      slide.style.color = '';
-      slide.style.borderRight = '';
-      slide.style.textShadow = '';
-      slide.style.backgroundColor = '';
+    if (slide) {
+      if (backgroundColor) {
+        slide.style.backgroundColor = backgroundColor;
+        slide.style.color = 'white';
+        slide.style.borderRight = '1px solid white';
+        slide.style.textShadow = '1px 1px black';
+        sceneEl.setAttribute('background', 'color', backgroundColor);
+      } else {
+        slide.style.color = '';
+        slide.style.borderRight = '';
+        slide.style.textShadow = '';
+        slide.style.backgroundColor = '';
+      }
     }
   },
 

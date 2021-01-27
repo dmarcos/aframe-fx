@@ -2,8 +2,6 @@ AFRAME.registerComponent('galaxy', {
   schema: {
     particlesNumber: {default: 20000},
     particleSize: {default: 0.1},
-    particleSpeed: {default: 0.005},
-    particleLifeTime: {default: 1000},
     src: {type: 'map'}
   },
   vertexShader:`
@@ -70,7 +68,6 @@ AFRAME.registerComponent('galaxy', {
       layerRotation += Math.PI / 15.0; // 20 minimal winding.
       a -= distanceBetweenLayers;
       b -= distanceBetweenLayers - 0.0007;
-      console.log("CACA " + a + " " + b);
     }
 
     this.el.setObject3D('particleInstanced', mesh);
@@ -133,7 +130,6 @@ AFRAME.registerComponent('galaxy', {
     var geometry;
     var positions;
     var particleInfo;
-    var particleSpeed = this.data.particleSpeed;
 
     this.lastParticleDelta = this.lastParticleDelta || 0;
     this.lastParticleDelta += delta;

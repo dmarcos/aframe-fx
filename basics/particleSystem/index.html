@@ -11,14 +11,14 @@
     <script src="../../js/components/slideshow.js"></script>
     <script src="components/environment-map.js"></script>
     <script src="components/cloud.js"></script>
+    <script src="components/drawcalls.js"></script>
     <script src="components/galaxy.js"></script>
     <script src="components/fireworks.js"></script>
     <script src="components/particle-system-shell.js"></script>
     <script src="components/particle-system-explosion.js"></script>
-    <script src="components/particle-system-wireframe.js"></script>
+    <script src="components/particle-system-naive-wireframe.js"></script>
     <script src="components/particle-system-instanced.js"></script>
-    <script src="components/particle-system-naive.js"></script>
-    <script src="components/particle-system-flame.js"></script>
+    <script src="components/particle-system-rocket-exhaust.js"></script>
   </head>
   <body>
     <a-scene
@@ -35,15 +35,21 @@
         <div class="slide">
           <div>
             <h1>Particle System</h1>
-            <p>A particle system is a technique to represent smoke, fire, rain, fireworks... or any phenomena that can be represented as a cloud of discrete small elements that combined appear as a single entity or follow some group dynamics.</p>
+            <p>A particle system is a technique to represent smoke, fire, rain, fireworks... Usually phenomena composed of many small discrete elements that combined appear as a single entity or follow some group dynamics.</p>
 
-            <p>The emitter is a location where the particles are created. Each particle can be rendered in multiple ways. Here we use quads that are always facing the camera also reffered as billboards.</p>
+            <p>The emitter is a location where the particles are created. Usually each particle has a time counter, recycled once expired and then reemitted for good use of resources.
+            </p>
+
+            <p>
+            Each particle can be rendered in multiple ways. This example renders individual <a href="http://localhost:8080/basics/quad/#0">quads</a>. This results in a drawcall per particle which is very inefficient but keeps the code simple for illustration purposes.</p>
+
+            <p>Draw Calls: <strong id='naiveParticleSystem'>0</strong></p>
           </div>
         </div>
-        <a-entity camera position="-0.40 0 1"></a-entity>
+        <a-entity camera position="-0.40 0 1" drawcalls="target: #naiveParticleSystem"></a-entity>
         <a-entity>
           <a-entity
-            particle-system-wireframe="particleSize: 0.03; particleSpeed: 0.003; particleLifeTime: 5000"
+            particle-system-naive-wireframe="particleSize: 0.03; particleSpeed: 0.003; particleLifeTime: 5000"
             position='0 -0.5 0'></a-entity>
         </a-entity>
       </a-entity>
@@ -52,10 +58,14 @@
         <div class="slide">
           <div>
             <h1>Particles Texture</h1>
-            <p>We can apply a texture to the particles to simulate different effects</p>
+            <p>We can apply a texture to a particle to change its appereance and simulate the desired effect.</p>
+
+            <p>This example renders the quads using a technique called <a href="https://webglfundamentals.org/webgl/lessons/webgl-instanced-drawing.html">instanced drawing</a> to reduce the number of draw calls</p>
+
+            <p>Draw Calls: <strong id='instancedParticleSystem'>0</strong></p>
           </div>
         </div>
-         <a-entity camera position="-0.40 0 1"></a-entity>
+         <a-entity camera position="-0.40 0 1" drawcalls="target: #instancedParticleSystem"></a-entity>
         <a-entity>
           <a-entity
             particle-system-instanced="particleSize: 0.03; src: #particleImage; particleSpeed: 0.002; particleLifeTime: 20000"
@@ -94,9 +104,9 @@
             environment-map
             scale="0.012 0.012 0.012"></a-entity>
           <a-entity
-            particle-system-flame="particleSize: 0.06; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 1800; color: #4768ac; endColor: #c995ea"
-            particle-system-flame__diamond="particleSize: 0.04; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 1800; color: white; modulate: true"
-            particle-system-flame__fire="particleSize: 0.04; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 600; color: #c9604b;"
+            particle-system-rocket-exhaust="particleSize: 0.06; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 1800; color: #4768ac; endColor: #c995ea"
+            particle-system-rocket-exhaust__diamond="particleSize: 0.04; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 1800; color: white; modulate: true"
+            particle-system-rocket-exhaust__fire="particleSize: 0.04; src: #particleFlame; particleSpeed: 0.005; particleLifeTime: 600; color: #c9604b;"
             position='0 -0.9 0'></a-entity>
             <a-entity cloud scale="5 5 1" position="-0.6 1 -1.5"></a-entity>
             <a-entity cloud="startTime: 2000" scale="5 5 1" position="1.8 1 -1.5">
@@ -107,8 +117,10 @@
       <a-entity id="slide5">
         <div class="slide dark">
           <div>
-            <h1>Galaxy</h1>
-            <p></p>
+            <h1>Complex Particle Behavior</h1>
+            <p>Redefine the init and tick methods to animate the particles. A few lines of code can describe very complex behavior</p>
+            <p>This is an interpretation of the <a href="https://en.wikipedia.org/wiki/Density_wave_theory">Density Wave Theory</a> that describes how the structure of spiral galaxies is formed. Notice that while the galaxy rotates the arms remain static
+            <p><strong>tl:dr</strong> Arms are formed by matter rotating in overlapping concentric eliptical orbits. </p>
           </div>
         </div>
          <a-entity camera position="-0.05 0 0.125"></a-entity>

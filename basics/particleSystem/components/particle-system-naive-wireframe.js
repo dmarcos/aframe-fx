@@ -1,4 +1,4 @@
-AFRAME.registerComponent('particle-system-wireframe', {
+AFRAME.registerComponent('particle-system-naive-wireframe', {
   schema: {
     particleSize: {default: 0.1},
     particleSpeed: {default: 0.005},

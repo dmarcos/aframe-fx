@@ -1,4 +1,4 @@
-AFRAME.registerComponent('particle-system-flame', {
+AFRAME.registerComponent('particle-system-rocket-exhaust', {
   schema: {
     particlesNumber: {default: 100},
     particleSize: {default: 0.1},
