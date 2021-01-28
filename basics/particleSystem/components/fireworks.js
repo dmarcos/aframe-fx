@@ -17,14 +17,14 @@ AFRAME.registerComponent('fireworks', {
     this.timeSinceLastFirework = 0;
     this.el.setAttribute('particle-system-shell', {
       particleSize: 0.015,
-      src: '#particleFirework',
+      src: '#particleDot',
       particleSpeed: 0.020,
       particleLifeTime: 500
     });
 
     this.el.setAttribute('particle-system-explosion', {
       particleSize: 0.015,
-      src: '#particleFirework',
+      src: '#particleDot',
       particleSpeed: 0.025,
       on: 'particleended',
       particleLifeTime: 4000

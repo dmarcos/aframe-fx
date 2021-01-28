@@ -29,9 +29,9 @@
       background="color: white"
       info-message="htmlSrc: #messageText">
       <a-assets>
-        <img id="particleImage" src="assets/particle.png" />
+        <img id="particleSnowflake" src="assets/snowflake.png" />
         <img id="particleFlame" src="assets/flame.png" />
-        <img id="particleFirework" src="assets/firework.png" />
+        <img id="particleDot" src="assets/dot.png" />
         <a-asset-item id="starship" src="assets/starship.glb"></a-asset-item>
         <a-asset-item id="messageText" src="assets/message.html"></a-asset-item>
       </a-assets>
@@ -39,13 +39,13 @@
         <div class="slide">
           <div>
             <h1>Particle System</h1>
-            <p>A particle system is a technique to represent smoke, fire, rain, fireworks... Usually phenomena composed of many small discrete elements that combined appear as a single entity or follow some common dynamics.</p>
+            <p>Particle systems represent smoke, fire, rain, fireworks... Usually phenomena composed of many small discrete elements that combined appear as a single entity or follow some common dynamics.</p>
 
             <p>The emitter is a location where the particles are created. Usually each particle has a time counter. When the timer expires the particle is recycled and eventually reemitted as a new particle.
             </p>
 
             <p>
-            We can render particles in multiple ways. This example renders individual <a href="http://localhost:8080/basics/quad/#0">quads</a>. This results in a drawcall per particle which is very inefficient but <a href="https://github.com/dmarcos/aframe-fx/blob/master/basics/particleSystem/components/particle-system-naive-wireframe.js">keeps the code simple for illustration purposes.</a></p>
+            We can render particles in multiple ways. This example uses individual <a href="http://localhost:8080/basics/quad/#0">quads</a>. This results in a drawcall per particle which is very inefficient but <a href="https://github.com/dmarcos/aframe-fx/blob/master/basics/particleSystem/components/particle-system-naive-wireframe.js">keeps the code simple for illustration purposes.</a></p>
 
             <p>Draw Calls: <strong id='naiveParticleSystem'>0</strong></p>
           </div>
@@ -62,7 +62,7 @@
         <div class="slide">
           <div>
             <h1>Particles Texture</h1>
-            <p>We can apply a texture to a particle to change its appereance and simulate the desired effect.</p>
+            <p>Apply a texture to a particle to change its appereance and simulate the desired effect.</p>
 
             <p><a href="https://github.com/dmarcos/aframe-fx/blob/master/basics/particleSystem/components/particle-system-instanced.js">This example</a> renders the quads using a technique called <a href="https://webglfundamentals.org/webgl/lessons/webgl-instanced-drawing.html">instanced drawing</a> to reduce the number of draw calls. Compare the number with the previous example.</p>
 
@@ -72,7 +72,7 @@
          <a-entity camera position="-0.40 0 1" drawcalls="target: #instancedParticleSystem"></a-entity>
         <a-entity>
           <a-entity
-            particle-system-instanced="particleSize: 0.03; src: #particleImage; particleSpeed: 0.002; particleLifeTime: 20000"
+            particle-system-instanced="particleSize: 0.03; src: #particleSnowflake; particleSpeed: 0.002; particleLifeTime: 20000"
             position='0 0.2 0'></a-entity>
         </a-entity>
       </a-entity>
@@ -81,7 +81,7 @@
         <div class="slide">
           <div>
             <h1>Combine Particle Systems</h1>
-            <p><a href="https://github.com/dmarcos/aframe-fx/blob/master/basics/particleSystem/index.html#L92">Multiple particle systems</a> can be combined to create a single effect. This is a crude representation of the <a href="https://en.wikipedia.org/wiki/SpaceX_Raptor">SpaceX Raptor engine </a> exhaust. We use 3 <a href="https://github.com/dmarcos/aframe-fx/blob/master/basics/particleSystem/components/particle-system-rocket-exhaust.js">particle systems</a>: One for the brighter exhaust coming out from the nozzle, one for the purple plume and a last one to represent the <a href="https://en.wikipedia.org/wiki/Shock_diamond">shock diamonds</a></p>
+            <p>This is a simple representation of the <a href="https://en.wikipedia.org/wiki/SpaceX_Raptor">SpaceX Raptor engine</a> exhaust. It combines <a href="https://github.com/dmarcos/aframe-fx/blob/master/basics/particleSystem/index.html#L92">3 particle systems</a>: One for the brighter exhaust coming out from the nozzle, one for the purple plume and a last one to represent the <a href="https://en.wikipedia.org/wiki/Shock_diamond">shock diamonds</a></p>
           </div>
         </div>
          <a-entity camera position="-0.40 0 1"></a-entity>
@@ -106,8 +106,8 @@
       <a-entity id="slide4">
         <div class="slide dark">
           <div>
-            <h1>Chain Particle Systems</h1>
-            <p>We can make effects composed of multiple particle systems. In this case we have a particle system for the shells and another one for the stars. One the shell particle finishes an event triggers the start of the firework stars</p>
+            <h1>Chaining Particle Systems</h1>
+            <p>When the timer expires for the shell particle <a href="https://github.com/dmarcos/aframe-fx/blob/master/basics/particleSystem/components/fireworks.js#L29">an event</a> triggers the firework sparks</p>
           </div>
         </div>
          <a-entity camera position="-0.40 0 1"></a-entity>
@@ -132,11 +132,11 @@
           <a-entity swap-entities="toggleButton: #toggleOrbits; entity1: #galaxy; entity2: #galaxyOrbits">
             <a-entity
               id = "galaxy"
-              galaxy="particleSize: 0.0006; src: #particleFirework; particleSpeed: 0.002;"
+              galaxy="particleSize: 0.0006; src: #particleDot; particleSpeed: 0.002;"
               position='0 -0.5 0'></a-entity>
             <a-entity
               id = "galaxyOrbits"
-              galaxy="particleSize: 0.0006; src: #particleFirework; particleSpeed: 0.002; showOrbits: true"
+              galaxy="particleSize: 0.0006; src: #particleDot; particleSpeed: 0.002; showOrbits: true"
               position='0 -0.5 0' visible="false"></a-entity>
           </a-entity>
         </a-entity>
